@@ -2,32 +2,99 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>here. 1.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+            -webkit-tap-highlight-color: transparent;
+            /* Отключаем размытие шрифтов для пиксельного эффекта */
+            image-rendering: pixelated;
+            font-smooth: never;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: none;
         }
         body, html {
             height: 100%;
             overflow: hidden;
-            background-color: #000000;
+            background-color: #000000; /* Абсолютно черный фон */
+            color: #ffffff;
         }
         .container {
             display: flex;
             width: 100%;
             height: 100%;
+            position: relative;
+            background-color: #000000;
         }
+        
+        /* Мобильная шапка */
+        .mobile-header {
+            display: none;
+            width: 100%;
+            height: 60px;
+            background-color: #000000; /* Глубокий черный */
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .header-btn {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .burger-icon {
+            width: 20px;
+            height: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .burger-icon span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #ffffff;
+        }
+        .plus-icon {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            position: relative;
+        }
+        .plus-icon::before, .plus-icon::after {
+            content: '';
+            position: absolute;
+            background-color: #ffffff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .plus-icon::before { width: 12px; height: 2px; }
+        .plus-icon::after { width: 2px; height: 12px; }
+
+        /* Левый сайдбар */
         .sidebar-left {
             width: 220px;
-            border-right: 1px solid #ffffff;
+            border-right: 1px solid #222222;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             background-color: #000000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .sidebar-left-top {
             padding: 15px;
@@ -37,7 +104,6 @@
             justify-content: space-between;
             font-size: 18px;
             margin-bottom: 20px;
-            color: #ffffff;
         }
         .btn-new-chat {
             display: block;
@@ -53,10 +119,11 @@
         }
         .status-online {
             padding: 15px;
-            border-top: 1px solid #ffffff;
+            border-top: 1px solid #222222;
             font-size: 14px;
-            color: #ffffff;
         }
+
+        /* Главный контент */
         .main-content {
             flex: 1;
             display: flex;
@@ -64,7 +131,8 @@
             justify-content: space-between;
             padding: 20px 40px;
             height: 100%;
-            background-color: #000000;
+            background-color: #000000; /* Черный фон */
+            position: relative;
         }
         .chat-window {
             flex: 1;
@@ -83,8 +151,7 @@
         }
         .message {
             line-height: 1.5;
-            font-size: 15px;
-            color: #ffffff;
+            font-size: 16px;
             transition: color 0.3s, font-size 0.3s;
         }
         @keyframes subtle-shake {
@@ -112,62 +179,65 @@
         }
         .main-title-container {
             text-align: center;
-            margin-top: 20vh;
+            margin-top: 25vh;
         }
         .main-title {
-            font-size: 24px;
+            font-size: 28px;
             margin-bottom: 30px;
             letter-spacing: 2px;
-            color: #ffffff;
         }
+
+        /* Область ввода — строго ЧЕРНАЯ, с тонкой белой/серой границей для стиля */
         .input-wrapper {
             width: 100%;
-            max-width: 600px;
-            margin: 0 auto 20px auto;
+            max-width: 650px;
+            margin: 0 auto 10px auto;
             position: relative;
             display: flex;
             align-items: center;
+            background-color: #000000; /* Никакого серого */
+            border: 1px solid #333333; /* Тонкая рамка как на скрине */
+            border-radius: 28px;
+            padding: 6px 12px;
         }
         .search-input {
             width: 100%;
-            padding: 15px 50px 15px 40px;
-            border: 1px solid #ffffff;
-            border-radius: 25px;
+            padding: 12px 40px 12px 15px;
+            border: none;
             font-size: 16px;
             outline: none;
             background: transparent;
             color: #ffffff;
         }
-        .input-prefix {
-            position: absolute;
-            left: 15px;
-            font-size: 16px;
-            pointer-events: none;
-            color: #ffffff;
+        .search-input::placeholder {
+            color: #757575;
         }
         .enter-icon {
             position: absolute;
-            right: 20px;
-            font-size: 18px;
+            right: 16px;
+            font-size: 20px;
             background: transparent;
             border: none;
             cursor: pointer;
             color: #ffffff;
+            opacity: 0.8;
         }
+
+        /* Правый сайдбар */
         .sidebar-right {
             width: 240px;
-            border-left: 1px solid #ffffff;
+            border-left: 1px solid #222222;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             background-color: #000000;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .command-list-header {
             padding: 15px;
-            border-bottom: 1px solid #ffffff;
+            border-bottom: 1px solid #222222;
             font-size: 14px;
             font-weight: bold;
-            color: #ffffff;
             user-select: none;
         }
         .commands-container {
@@ -190,7 +260,6 @@
         }
         .command-item {
             font-size: 13px;
-            color: #ffffff;
             cursor: pointer;
             padding: 4px 6px;
             border: 1px dashed transparent;
@@ -202,22 +271,95 @@
         }
         .mode-footer {
             padding: 15px;
-            border-top: 1px solid #ffffff;
+            border-top: 1px solid #222222;
             font-size: 14px;
-            color: #ffffff;
+        }
+
+        /* Задний фон под меню */
+        .overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 4;
+        }
+
+        /* МОБИЛЬНАЯ ВЕРСИЯ */
+        @media (max-width: 768px) {
+            .mobile-header {
+                display: flex;
+            }
+            .main-content {
+                padding: 70px 16px 20px 16px;
+            }
+            .main-title-container {
+                margin-top: 15vh;
+            }
+            .input-wrapper {
+                margin-bottom: 5px;
+                background-color: #000000; /* Оставляем абсолютно черным везде */
+                border-color: #444444;
+            }
+            
+            .sidebar-left {
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                z-index: 6;
+                transform: translateX(-100%);
+                width: 240px;
+                box-shadow: 5px 0 15px rgba(0,0,0,0.7);
+            }
+            .sidebar-right {
+                position: absolute;
+                right: 0;
+                top: 0;
+                height: 100%;
+                z-index: 6;
+                transform: translateX(100%);
+                width: 240px;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.7);
+            }
+
+            .sidebar-left.active, .sidebar-right.active {
+                transform: translateX(0);
+            }
+            .overlay.active {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
 
+    <div class="mobile-header">
+        <button class="header-btn" id="toggle-left" aria-label="Открыть меню">
+            <div class="burger-icon">
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+        <button class="header-btn" onclick="resetChat()" aria-label="Новый чат">
+            <div class="plus-icon"></div>
+        </button>
+    </div>
+
+    <div class="overlay" id="blur-overlay"></div>
+
     <div class="container">
-        <aside class="sidebar-left">
+        <aside class="sidebar-left" id="sidebar-left">
             <div class="sidebar-left-top">
                 <div class="header-title">
                     <span>here.</span>
                     <span>1.0</span>
                 </div>
                 <button class="btn-new-chat" onclick="resetChat()">New chat</button>
+                <button class="btn-new-chat" style="margin-top: 10px; border-style: dashed;" onclick="openCommands()">Command List</button>
             </div>
             <div class="status-online">• Online</div>
         </aside>
@@ -230,13 +372,12 @@
             </div>
 
             <div class="input-wrapper">
-                <span class="input-prefix">&gt;_</span>
-                <input type="text" id="user-input" class="search-input" placeholder="Your travel starts here." autofocus autocomplete="off">
+                <input type="text" id="user-input" class="search-input" placeholder="Напишите, чтобы говорить..." autofocus autocomplete="off">
                 <button class="enter-icon" id="send-btn">&#x21B5;</button>
             </div>
         </main>
 
-        <aside class="sidebar-right">
+        <aside class="sidebar-right" id="sidebar-right">
             <div class="command-list-header">Command List</div>
             <div class="commands-container">
                 <div class="command-group-title">color:</div>
@@ -277,18 +418,22 @@
     </div>
 
     <script>
-        // Теперь запросы идут в созданную тобой серверную функцию Vercel
         const API_URL = "/api/chat";
 
         const chatWindow = document.getElementById('chat-window');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
         const welcomeScreen = document.getElementById('welcome-screen');
+        
+        const sidebarLeft = document.getElementById('sidebar-left');
+        const sidebarRight = document.getElementById('sidebar-right');
+        const btnToggleLeft = document.getElementById('toggle-left');
+        const overlay = document.getElementById('blur-overlay');
 
         let messagesHistory = [];
         let currentTextColor = '#ffffff';
         let isRainbow = false;
-        let currentFontSize = '15px';
+        let currentFontSize = '16px';
         let isBold = false;
         let isShake = false;
         let isTypingEffect = false;
@@ -296,8 +441,27 @@
         let maxTokens = 1024;
         let responseDelayMs = 0;
 
+        btnToggleLeft.addEventListener('click', () => {
+            sidebarLeft.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        overlay.addEventListener('click', closeAllMenus);
+
+        function closeAllMenus() {
+            sidebarLeft.classList.remove('active');
+            sidebarRight.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+        function openCommands() {
+            sidebarLeft.classList.remove('active');
+            sidebarRight.classList.add('active');
+        }
+
         function insertCommand(cmd) {
             userInput.value = cmd;
+            closeAllMenus();
             userInput.focus();
         }
 
@@ -337,7 +501,7 @@
             else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; }
 
             if (isCommand) {
-                chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:12px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
+                chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
                 userInput.value = '';
                 chatWindow.scrollTop = chatWindow.scrollHeight;
                 return true;
@@ -366,6 +530,8 @@
         async function sendMessage() {
             const text = userInput.value.trim();
             if (text === "") return;
+
+            closeAllMenus();
 
             if (welcomeScreen) welcomeScreen.style.display = 'none';
 
@@ -433,6 +599,7 @@
 
         function resetChat() {
             messagesHistory = [];
+            closeAllMenus();
             chatWindow.innerHTML = `
                 <div class="main-title-container" id="welcome-screen">
                     <h1 class="main-title">here.</h1>
@@ -440,7 +607,7 @@
             `;
             chatWindow.classList.remove('shake-active');
             isShake = false; isRainbow = false; isBold = false; isTypingEffect = false;
-            currentTextColor = '#ffffff'; currentFontSize = '15px';
+            currentTextColor = '#ffffff'; currentFontSize = '16px';
             minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
             userInput.focus();
         }
