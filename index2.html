@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>here. 1.0</title>
+    <style>
+        /* Общие стили для черного-белого интерфейса */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body, html {
+            height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+        }
+
+        /* Главный контейнер из трех колонок */
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Левая колонка */
+        .sidebar-left {
+            width: 220px;
+            border-right: 1px solid #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #000000;
+        }
+
+        .sidebar-left-top {
+            padding: 15px;
+        }
+
+        .header-title {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .btn-new-chat {
+            display: block;
+            width: 100%;
+            padding: 8px 15px;
+            border: 1px solid #ffffff;
+            border-radius: 20px;
+            text-align: left;
+            background: transparent;
+            cursor: pointer;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .status-online {
+            padding: 15px;
+            border-top: 1px solid #ffffff;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        /* Центральная область */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 40px;
+            height: 100%;
+            background-color: #000000;
+        }
+
+        /* Окно чата с ответами нейросети */
+        .chat-window {
+            flex: 1;
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-window::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        /* Динамические стили текста ответов */
+        .message {
+            line-height: 1.5;
+            font-size: 15px;
+            color: #ffffff;
+            transition: color 0.3s, font-size 0.3s;
+        }
+
+        /* Анимация тряски (shake) */
+        @keyframes subtle-shake {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-1px, 1px); }
+            40% { transform: translate(-1px, -1px); }
+            60% { transform: translate(1px, 1px); }
+            80% { transform: translate(1px, -1px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        .shake-active {
+            animation: subtle-shake 0.2s infinite;
+        }
+
+        /* Радужный текст (rainbow) */
+        .rainbow-text {
+            background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 400% 100%;
+            animation: rainbow-animation 8s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes rainbow-animation {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 400% 50%; }
+        }
+
+        .main-title-container {
+            text-align: center;
+            margin-top: 20vh;
+        }
+
+        .main-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        /* Поле ввода */
+        .input-wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 40px;
+            border: 1px solid #ffffff;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            background: transparent;
+            color: #ffffff;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 15px;
+            font-size: 16px;
+            pointer-events: none;
+            color: #ffffff;
+        }
+
+        .enter-icon {
+            position: absolute;
+            right: 20px;
+            font-size: 18px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: #ffffff;
+        }
+
+        /* Правая колонка */
+        .sidebar-right {
+            width: 240px;
+            border-left: 1px solid #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: #000000;
+        }
+
+        .command-list-header {
+            padding: 15px;
+            border-bottom: 1px solid #ffffff;
+            font-size: 14px;
+            font-weight: bold;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        /* Скролл-контейнер для команд */
+        .commands-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .commands-container::-webkit-scrollbar {
+            width: 0px;
+        }
+
+        .command-group-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #888888;
+            margin-top: 5px;
+            margin-bottom: 3px;
+        }
+
+        .command-item {
+            font-size: 13px;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 4px 6px;
+            border: 1px dashed transparent;
+            transition: all 0.2s;
+        }
+
+        .command-item:hover {
+            border-color: #ffffff;
+            background-color: #111111;
+        }
+
+        .mode-footer {
+            padding: 15px;
+            border-top: 1px solid #ffffff;
+            font-size: 14px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <aside class="sidebar-left">
+            <div class="sidebar-left-top">
+                <div class="header-title">
+                    <span>here.</span>
+                    <span>1.0</span>
+                </div>
+                <button class="btn-new-chat" onclick="resetChat()">New chat</button>
+            </div>
+            <div class="status-online">
+                • Online
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="chat-window" id="chat-window">
+                <div class="main-title-container" id="welcome-screen">
+                    <h1 class="main-title">here.</h1>
+                </div>
+            </div>
+
+            <div class="input-wrapper">
+                <span class="input-prefix">&gt;_</span>
+                <input type="text" id="user-input" class="search-input" placeholder="Your travel starts here." autofocus autocomplete="off">
+                <button class="enter-icon" id="send-btn">&#x21B5;</button>
+            </div>
+        </main>
+
+        <aside class="sidebar-right">
+            <div class="command-list-header">
+                Command List
+            </div>
+            
+            <div class="commands-container">
+                <div class="command-group-title">color:</div>
+                <div class="command-item" onclick="insertCommand('white')">white</div>
+                <div class="command-item" onclick="insertCommand('red')">red</div>
+                <div class="command-item" onclick="insertCommand('green')">green</div>
+                <div class="command-item" onclick="insertCommand('orange')">orange</div>
+                <div class="command-item" onclick="insertCommand('blue')">blue</div>
+                <div class="command-item" onclick="insertCommand('yellow')">yellow</div>
+                <div class="command-item" onclick="insertCommand('purple')">purple</div>
+                <div class="command-item" onclick="insertCommand('rainbow')">rainbow</div>
+
+                <div class="command-group-title">size:</div>
+                <div class="command-item" onclick="insertCommand('size: 16')">size: 1-100</div>
+
+                <div class="command-group-title">min/max:</div>
+                <div class="command-item" onclick="insertCommand('min 10')">min 10</div>
+                <div class="command-item" onclick="insertCommand('max 100')">max 100</div>
+
+                <div class="command-group-title">shake:</div>
+                <div class="command-item" onclick="insertCommand('shake')">shake</div>
+                <div class="command-item" onclick="insertCommand('noshake')">noshake</div>
+
+                <div class="command-group-title">delay:</div>
+                <div class="command-item" onclick="insertCommand('delay 5 sec')">delay 5 sec</div>
+                <div class="command-item" onclick="insertCommand('delay 100 sec')">delay 100 sec</div>
+
+                <div class="command-group-title">bold:</div>
+                <div class="command-item" onclick="insertCommand('bold')">bold</div>
+                <div class="command-item" onclick="insertCommand('nobold')">nobold</div>
+
+                <div class="command-group-title">typing:</div>
+                <div class="command-item" onclick="insertCommand('typing')">typing</div>
+                <div class="command-item" onclick="insertCommand('notyping')">notyping</div>
+            </div>
+
+            <div class="mode-footer" id="mode-status">
+                Mode: Groq AI
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const API_KEY = "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";
+        const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const welcomeScreen = document.getElementById('welcome-screen');
+
+        let messagesHistory = [];
+
+        /* Настройки модификаторов вывода */
+        let currentTextColor = '#ffffff';
+        let isRainbow = false;
+        let currentFontSize = '15px';
+        let isBold = false;
+        let isShake = false;
+        let isTypingEffect = false;
+        
+        let minTokens = 10;
+        let maxTokens = 1024;
+        let responseDelayMs = 0;
+
+        function insertCommand(cmd) {
+            userInput.value = cmd;
+            userInput.focus();
+        }
+
+        // Парсер команд
+        function parseAndApplyCommands(text) {
+            let cleanText = text.trim().toLowerCase(); // Приводим к нижнему регистру для гибкости
+            let isCommand = false;
+
+            // Смена цветов
+            if (cleanText === 'white') { currentTextColor = '#ffffff'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'red') { currentTextColor = '#ff3333'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'green') { currentTextColor = '#33ff33'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'orange') { currentTextColor = '#ff9900'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'blue') { currentTextColor = '#3399ff'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'yellow') { currentTextColor = '#ffff33'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'purple') { currentTextColor = '#cc33ff'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'rainbow') { isRainbow = true; isCommand = true; }
+            
+            // Размер текста
+            else if (cleanText.startsWith('size:')) {
+                let num = parseInt(cleanText.replace('size:', '').trim());
+                if (!isNaN(num) && num >= 1 && num <= 100) {
+                    currentFontSize = num + 'px';
+                    isCommand = true;
+                }
+            }
+            
+            // Минимальная и максимальная длина ответа
+            else if (cleanText.startsWith('min ')) {
+                let num = parseInt(cleanText.replace('min ', '').trim());
+                if (!isNaN(num)) { minTokens = num; isCommand = true; }
+            }
+            else if (cleanText.startsWith('max ')) {
+                let num = parseInt(cleanText.replace('max ', '').trim());
+                if (!isNaN(num)) { maxTokens = num; isCommand = true; }
+            }
+            
+            // Тряска
+            else if (cleanText === 'shake') { isShake = true; isCommand = true; chatWindow.classList.add('shake-active'); }
+            else if (cleanText === 'noshake') { isShake = false; isCommand = true; chatWindow.classList.remove('shake-active'); }
+            
+            // Задержка ответа
+            else if (cleanText.startsWith('delay ') && cleanText.endsWith(' sec')) {
+                let num = parseInt(cleanText.replace('delay ', '').replace(' sec', '').trim());
+                if (!isNaN(num) && num >= 5 && num <= 1000) {
+                    responseDelayMs = num * 1000;
+                    isCommand = true;
+                }
+            }
+            
+            // Жирность текста
+            else if (cleanText === 'bold') { isBold = true; isCommand = true; }
+            else if (cleanText === 'nobold') { isBold = false; isCommand = true; }
+            
+            // Эффект печати текста
+            else if (cleanText === 'typing') { isTypingEffect = true; isCommand = true; }
+            else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; }
+
+            if (isCommand) {
+                chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:12px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
+                userInput.value = '';
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+                return true;
+            }
+            return false;
+        }
+
+        function typeWriterEffect(element, text, speed = 25) {
+            let i = 0;
+            element.innerHTML = `<strong>Groq:</strong> `;
+            
+            const textSpan = document.createElement('span');
+            if (isRainbow) textSpan.classList.add('rainbow-text');
+            element.appendChild(textSpan);
+
+            function type() {
+                if (i < text.length) {
+                    textSpan.innerHTML += text.charAt(i);
+                    i++;
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (text === "") return;
+
+            if (welcomeScreen) {
+                welcomeScreen.style.display = 'none';
+            }
+
+            const isCmd = parseAndApplyCommands(text);
+            if (isCmd) return;
+
+            chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text}</div>`;
+            userInput.value = '';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            messagesHistory.push({ role: "user", content: text });
+
+            const loaderId = 'loader-' + Date.now();
+            chatWindow.innerHTML += `<div class="message" id="${loaderId}"><strong>Groq:</strong> . . .</div>`;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            let systemPrompt = `Ответь на запрос пользователя. Твой ответ обязательно должен содержать не менее ${minTokens} слов.`;
+
+            setTimeout(async () => {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 
+                            'Authorization': `Bearer ${API_KEY}`,
+                            'Content-Type': 'application/json' 
+                        },
+                        body: JSON.stringify({
+                            model: "llama-3.3-70b-versatile",
+                            messages: [{ role: "system", content: systemPrompt }, ...messagesHistory],
+                            max_tokens: maxTokens
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    const loader = document.getElementById(loaderId);
+
+                    if (data.choices && data.choices[0].message.content) {
+                        const reply = data.choices[0].message.content;
+                        messagesHistory.push({ role: "assistant", content: reply });
+
+                        loader.style.fontSize = currentFontSize;
+                        loader.style.fontWeight = isBold ? 'bold' : 'normal';
+                        if (!isRainbow) {
+                            loader.style.color = currentTextColor;
+                        }
+
+                        if (isTypingEffect) {
+                            typeWriterEffect(loader, reply);
+                        } else {
+                            if (isRainbow) {
+                                loader.innerHTML = `<strong>Groq:</strong> <span class="rainbow-text">${reply}</span>`;
+                            } else {
+                                loader.innerHTML = `<strong>Groq:</strong> ${reply}`;
+                            }
+                        }
+                    } else {
+                        loader.innerHTML = `<strong>Ошибка:</strong> ${JSON.stringify(data.error || data)}`;
+                    }
+                } catch (err) {
+                    const loader = document.getElementById(loaderId);
+                    loader.innerHTML = `<strong>Ошибка:</strong> Не удалось подключиться к сети.`;
+                }
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }, responseDelayMs);
+        }
+
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        sendBtn.addEventListener('click', sendMessage);
+
+        function resetChat() {
+            messagesHistory = [];
+            chatWindow.innerHTML = `
+                <div class="main-title-container" id="welcome-screen">
+                    <h1 class="main-title">here.</h1>
+                </div>
+            `;
+            chatWindow.classList.remove('shake-active');
+            isShake = false; isRainbow = false; isBold = false; isTypingEffect = false;
+            currentTextColor = '#ffffff'; currentFontSize = '15px';
+            minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
+            userInput.focus();
+        }
+    </script>
+</body>
+</html>
