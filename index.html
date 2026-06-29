@@ -5,28 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>here. 1.0</title>
     <style>
-        /* Общие стили для черного-белого интерфейса */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Courier New', Courier, monospace;
         }
-
         body, html {
             height: 100%;
             overflow: hidden;
             background-color: #000000;
         }
-
-        /* Главный контейнер из трех колонок */
         .container {
             display: flex;
             width: 100%;
             height: 100%;
         }
-
-        /* Левая колонка */
         .sidebar-left {
             width: 220px;
             border-right: 1px solid #ffffff;
@@ -35,11 +29,9 @@
             justify-content: space-between;
             background-color: #000000;
         }
-
         .sidebar-left-top {
             padding: 15px;
         }
-
         .header-title {
             display: flex;
             justify-content: space-between;
@@ -47,7 +39,6 @@
             margin-bottom: 20px;
             color: #ffffff;
         }
-
         .btn-new-chat {
             display: block;
             width: 100%;
@@ -60,15 +51,12 @@
             font-size: 14px;
             color: #ffffff;
         }
-
         .status-online {
             padding: 15px;
             border-top: 1px solid #ffffff;
             font-size: 14px;
             color: #ffffff;
         }
-
-        /* Центральная область */
         .main-content {
             flex: 1;
             display: flex;
@@ -78,8 +66,6 @@
             height: 100%;
             background-color: #000000;
         }
-
-        /* Окно чата с ответами нейросети */
         .chat-window {
             flex: 1;
             width: 100%;
@@ -92,20 +78,15 @@
             flex-direction: column;
             gap: 15px;
         }
-
         .chat-window::-webkit-scrollbar {
             width: 0px;
         }
-
-        /* Динамические стили текста ответов */
         .message {
             line-height: 1.5;
             font-size: 15px;
             color: #ffffff;
             transition: color 0.3s, font-size 0.3s;
         }
-
-        /* Анимация тряски (shake) */
         @keyframes subtle-shake {
             0% { transform: translate(0, 0); }
             20% { transform: translate(-1px, 1px); }
@@ -114,12 +95,9 @@
             80% { transform: translate(1px, -1px); }
             100% { transform: translate(0, 0); }
         }
-
         .shake-active {
             animation: subtle-shake 0.2s infinite;
         }
-
-        /* Радужный текст (rainbow) */
         .rainbow-text {
             background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
             -webkit-background-clip: text;
@@ -128,25 +106,20 @@
             animation: rainbow-animation 8s linear infinite;
             display: inline-block;
         }
-
         @keyframes rainbow-animation {
             0% { background-position: 0% 50%; }
             100% { background-position: 400% 50%; }
         }
-
         .main-title-container {
             text-align: center;
             margin-top: 20vh;
         }
-
         .main-title {
             font-size: 24px;
             margin-bottom: 30px;
             letter-spacing: 2px;
             color: #ffffff;
         }
-
-        /* Поле ввода */
         .input-wrapper {
             width: 100%;
             max-width: 600px;
@@ -155,7 +128,6 @@
             display: flex;
             align-items: center;
         }
-
         .search-input {
             width: 100%;
             padding: 15px 50px 15px 40px;
@@ -166,7 +138,6 @@
             background: transparent;
             color: #ffffff;
         }
-
         .input-prefix {
             position: absolute;
             left: 15px;
@@ -174,7 +145,6 @@
             pointer-events: none;
             color: #ffffff;
         }
-
         .enter-icon {
             position: absolute;
             right: 20px;
@@ -184,8 +154,6 @@
             cursor: pointer;
             color: #ffffff;
         }
-
-        /* Правая колонка */
         .sidebar-right {
             width: 240px;
             border-left: 1px solid #ffffff;
@@ -194,7 +162,6 @@
             justify-content: space-between;
             background-color: #000000;
         }
-
         .command-list-header {
             padding: 15px;
             border-bottom: 1px solid #ffffff;
@@ -203,8 +170,6 @@
             color: #ffffff;
             user-select: none;
         }
-
-        /* Скролл-контейнер для команд */
         .commands-container {
             flex: 1;
             overflow-y: auto;
@@ -213,11 +178,9 @@
             flex-direction: column;
             gap: 12px;
         }
-
         .commands-container::-webkit-scrollbar {
             width: 0px;
         }
-
         .command-group-title {
             font-size: 11px;
             text-transform: uppercase;
@@ -225,7 +188,6 @@
             margin-top: 5px;
             margin-bottom: 3px;
         }
-
         .command-item {
             font-size: 13px;
             color: #ffffff;
@@ -234,12 +196,10 @@
             border: 1px dashed transparent;
             transition: all 0.2s;
         }
-
         .command-item:hover {
             border-color: #ffffff;
             background-color: #111111;
         }
-
         .mode-footer {
             padding: 15px;
             border-top: 1px solid #ffffff;
@@ -259,9 +219,7 @@
                 </div>
                 <button class="btn-new-chat" onclick="resetChat()">New chat</button>
             </div>
-            <div class="status-online">
-                • Online
-            </div>
+            <div class="status-online">• Online</div>
         </aside>
 
         <main class="main-content">
@@ -279,10 +237,7 @@
         </main>
 
         <aside class="sidebar-right">
-            <div class="command-list-header">
-                Command List
-            </div>
-            
+            <div class="command-list-header">Command List</div>
             <div class="commands-container">
                 <div class="command-group-title">color:</div>
                 <div class="command-item" onclick="insertCommand('white')">white</div>
@@ -317,15 +272,13 @@
                 <div class="command-item" onclick="insertCommand('typing')">typing</div>
                 <div class="command-item" onclick="insertCommand('notyping')">notyping</div>
             </div>
-
-            <div class="mode-footer" id="mode-status">
-                Mode: Groq AI
-            </div>
+            <div class="mode-footer">Mode: Groq AI</div>
         </aside>
     </div>
 
     <script>
-        const API_KEY = "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";
+        // ВАЖНО: Тут мы говорим Vercel взять ключ из настроек безопасности, которые ты вбил на Шаге 1
+        const API_KEY = "process.env.GROQ_API_KEY";
         const API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
         const chatWindow = document.getElementById('chat-window');
@@ -334,15 +287,12 @@
         const welcomeScreen = document.getElementById('welcome-screen');
 
         let messagesHistory = [];
-
-        /* Настройки модификаторов вывода */
         let currentTextColor = '#ffffff';
         let isRainbow = false;
         let currentFontSize = '15px';
         let isBold = false;
         let isShake = false;
         let isTypingEffect = false;
-        
         let minTokens = 10;
         let maxTokens = 1024;
         let responseDelayMs = 0;
@@ -352,12 +302,10 @@
             userInput.focus();
         }
 
-        // Парсер команд
         function parseAndApplyCommands(text) {
-            let cleanText = text.trim().toLowerCase(); // Приводим к нижнему регистру для гибкости
+            let cleanText = text.trim().toLowerCase();
             let isCommand = false;
 
-            // Смена цветов
             if (cleanText === 'white') { currentTextColor = '#ffffff'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'red') { currentTextColor = '#ff3333'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'green') { currentTextColor = '#33ff33'; isRainbow = false; isCommand = true; }
@@ -366,17 +314,10 @@
             else if (cleanText === 'yellow') { currentTextColor = '#ffff33'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'purple') { currentTextColor = '#cc33ff'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'rainbow') { isRainbow = true; isCommand = true; }
-            
-            // Размер текста
             else if (cleanText.startsWith('size:')) {
                 let num = parseInt(cleanText.replace('size:', '').trim());
-                if (!isNaN(num) && num >= 1 && num <= 100) {
-                    currentFontSize = num + 'px';
-                    isCommand = true;
-                }
+                if (!isNaN(num) && num >= 1 && num <= 100) { currentFontSize = num + 'px'; isCommand = true; }
             }
-            
-            // Минимальная и максимальная длина ответа
             else if (cleanText.startsWith('min ')) {
                 let num = parseInt(cleanText.replace('min ', '').trim());
                 if (!isNaN(num)) { minTokens = num; isCommand = true; }
@@ -385,25 +326,14 @@
                 let num = parseInt(cleanText.replace('max ', '').trim());
                 if (!isNaN(num)) { maxTokens = num; isCommand = true; }
             }
-            
-            // Тряска
             else if (cleanText === 'shake') { isShake = true; isCommand = true; chatWindow.classList.add('shake-active'); }
             else if (cleanText === 'noshake') { isShake = false; isCommand = true; chatWindow.classList.remove('shake-active'); }
-            
-            // Задержка ответа
             else if (cleanText.startsWith('delay ') && cleanText.endsWith(' sec')) {
                 let num = parseInt(cleanText.replace('delay ', '').replace(' sec', '').trim());
-                if (!isNaN(num) && num >= 5 && num <= 1000) {
-                    responseDelayMs = num * 1000;
-                    isCommand = true;
-                }
+                if (!isNaN(num) && num >= 5 && num <= 1000) { responseDelayMs = num * 1000; isCommand = true; }
             }
-            
-            // Жирность текста
             else if (cleanText === 'bold') { isBold = true; isCommand = true; }
             else if (cleanText === 'nobold') { isBold = false; isCommand = true; }
-            
-            // Эффект печати текста
             else if (cleanText === 'typing') { isTypingEffect = true; isCommand = true; }
             else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; }
 
@@ -419,7 +349,6 @@
         function typeWriterEffect(element, text, speed = 25) {
             let i = 0;
             element.innerHTML = `<strong>Groq:</strong> `;
-            
             const textSpan = document.createElement('span');
             if (isRainbow) textSpan.classList.add('rainbow-text');
             element.appendChild(textSpan);
@@ -439,9 +368,7 @@
             const text = userInput.value.trim();
             if (text === "") return;
 
-            if (welcomeScreen) {
-                welcomeScreen.style.display = 'none';
-            }
+            if (welcomeScreen) welcomeScreen.style.display = 'none';
 
             const isCmd = parseAndApplyCommands(text);
             if (isCmd) return;
@@ -482,9 +409,7 @@
 
                         loader.style.fontSize = currentFontSize;
                         loader.style.fontWeight = isBold ? 'bold' : 'normal';
-                        if (!isRainbow) {
-                            loader.style.color = currentTextColor;
-                        }
+                        if (!isRainbow) loader.style.color = currentTextColor;
 
                         if (isTypingEffect) {
                             typeWriterEffect(loader, reply);
@@ -509,7 +434,6 @@
         userInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
-
         sendBtn.addEventListener('click', sendMessage);
 
         function resetChat() {
