@@ -277,9 +277,8 @@
     </div>
 
     <script>
-        // ВАЖНО: Тут мы говорим Vercel взять ключ из настроек безопасности, которые ты вбил на Шаге 1
-        const API_KEY = "process.env.GROQ_API_KEY";
-        const API_URL = "https://api.groq.com/openai/v1/chat/completions";
+        // Теперь запросы идут в созданную тобой серверную функцию Vercel
+        const API_URL = "/api/chat";
 
         const chatWindow = document.getElementById('chat-window');
         const userInput = document.getElementById('user-input');
@@ -389,12 +388,8 @@
                 try {
                     const response = await fetch(API_URL, {
                         method: 'POST',
-                        headers: { 
-                            'Authorization': `Bearer ${API_KEY}`,
-                            'Content-Type': 'application/json' 
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            model: "llama-3.3-70b-versatile",
                             messages: [{ role: "system", content: systemPrompt }, ...messagesHistory],
                             max_tokens: maxTokens
                         })
@@ -425,7 +420,7 @@
                     }
                 } catch (err) {
                     const loader = document.getElementById(loaderId);
-                    loader.innerHTML = `<strong>Ошибка:</strong> Не удалось подключиться к сети.`;
+                    loader.innerHTML = `<strong>Ошибка:</strong> Не удалось подключиться к серверу Vercel.`;
                 }
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             }, responseDelayMs);
