@@ -542,6 +542,10 @@
             
             chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px; border-left: 2px solid #333333; padding-left: 5px;">[Режим изменен]: ${mode.name}</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            // ИСПРАВЛЕНИЕ: Очищаем историю при смене мода, чтобы ИИ забыл старый контекст
+            messagesHistory = [];
+            
             saveCurrentState();
         }
 
