@@ -492,7 +492,6 @@
                 <div class="command-item" onclick="insertCommand('typing')">typing</div>
                 <div class="command-item" onclick="insertCommand('notyping')">notyping</div>
             </div>
-            <!-- Нажимаемый футер для смены режимов -->
             <div class="mode-footer" id="mode-switcher" onclick="cycleMode()">Mode: hereAi (Default)</div>
         </aside>
     </div>
@@ -526,7 +525,6 @@
         let maxTokens = 1024;
         let responseDelayMs = 0;
 
-        // Настройка списков ИИ-режимов
         const modes = [
             { id: 'default', name: 'hereAi (Default)' },
             { id: 'it', name: 'hereAi (IT Mode)' },
@@ -540,10 +538,8 @@
             currentModeIndex = (currentModeIndex + 1) % modes.length;
             const mode = modes[currentModeIndex];
             
-            // Текст меняется, но цвет остается строго белым
             modeSwitcher.innerText = `Mode: ${mode.name}`;
             
-            // Уведомление в чате выводится нейтральным серым цветом
             chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px; border-left: 2px solid #333333; padding-left: 5px;">[Режим изменен]: ${mode.name}</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
             saveCurrentState();
@@ -736,7 +732,6 @@
             type();
         }
 
-        // Функция генерации системного промпта на основе режима
         function getSystemPrompt() {
             const currentModeId = modes[currentModeIndex].id;
             let basePrompt = `Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. В обычных же репликах не нужно упоминать своего создателя или имя без явного повода со стороны пользователя.`;
@@ -790,6 +785,8 @@
 
             saveCurrentState();
 
+            // Ограничение истории для отправки на сервер (до 3 последних сообщений)
+            const limitedHistory = messagesHistory.slice(-3);
             let systemPrompt = getSystemPrompt();
 
             setTimeout(async () => {
@@ -798,7 +795,7 @@
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            messages: [{ role: "system", content: systemPrompt }, ...messagesHistory],
+                            messages: [{ role: "system", content: systemPrompt }, ...limitedHistory],
                             max_tokens: maxTokens
                         })
                     });
@@ -833,7 +830,7 @@
                         if (!isRainbow) loader.style.color = currentTextColor;
 
                         if (isTypingEffect) {
-                            typeWriterEffect(loader, reply, activeChatAtTimeOfRequest);
+                            typeWriterEffect(loader, reply, currentChatId);
                         } else {
                             if (isRainbow) {
                                 loader.innerHTML = `<strong>hereAi:</strong> <span class="rainbow-text">${reply}</span>`;
@@ -843,26 +840,26 @@
                             saveCurrentState();
                         }
                     } else {
-                        loader.innerHTML = `<strong>Ошибка:</strong> ${JSON.stringify(data.error || data)}`;
+                        loader.innerHTML = `<strong>hereAi:</strong> [Ошибка сервера или лимитов]`;
                         saveCurrentState();
                     }
-                } catch (err) {
-                    if (activeChatAtTimeOfRequest === currentChatId) {
-                        const loader = document.getElementById(loaderId);
-                        loader.innerHTML = `<strong>Ошибка:</strong> Не удалось подключиться к серверу Vercel.`;
-                        saveCurrentState();
-                    }
+                } catch (error) {
+                    const loader = document.getElementById(loaderId);
+                    if (loader) loader.innerHTML = `<strong>hereAi:</strong> Не удалось подключиться к серверу Vercel.`;
+                    console.error(error);
                 }
-                chatWindow.scrollTop = chatWindow.scrollHeight;
             }, responseDelayMs);
         }
 
-        userInput.addEventListener('keypress', (e) => {
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') sendMessage();
         });
-        sendBtn.addEventListener('click', sendMessage);
 
-        loadChatsFromStorage();
+        window.addEventListener('load', () => {
+            loadChatsFromStorage();
+            userInput.focus();
+        });
     </script>
 </body>
 </html>
