@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>here. 1.0</title>
+    <title>here. 1.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -12,7 +12,6 @@
             padding: 0;
             font-family: 'Courier Prime', 'Courier New', Courier, monospace;
             -webkit-tap-highlight-color: transparent;
-            /* Отключаем размытие шрифтов для пиксельного эффекта */
             image-rendering: pixelated;
             font-smooth: never;
             -webkit-font-smoothing: none;
@@ -21,7 +20,7 @@
         body, html {
             height: 100%;
             overflow: hidden;
-            background-color: #000000; /* Абсолютно черный фон */
+            background-color: #000000;
             color: #ffffff;
         }
         .container {
@@ -37,7 +36,7 @@
             display: none;
             width: 100%;
             height: 60px;
-            background-color: #000000; /* Глубокий черный */
+            background-color: #000000;
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
@@ -98,12 +97,17 @@
         }
         .sidebar-left-top {
             padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
         }
         .header-title {
             display: flex;
             justify-content: space-between;
             font-size: 18px;
             margin-bottom: 20px;
+            flex-shrink: 0;
         }
         .btn-new-chat {
             display: block;
@@ -116,11 +120,60 @@
             cursor: pointer;
             font-size: 14px;
             color: #ffffff;
+            flex-shrink: 0;
         }
-        .status-online {
-            padding: 15px;
-            border-top: 1px solid #222222;
-            font-size: 14px;
+        
+        /* Список сохраненных чатов */
+        .history-container {
+            margin-top: 20px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .history-container::-webkit-scrollbar {
+            width: 0px;
+        }
+        .history-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #888888;
+            margin-bottom: 5px;
+            padding-left: 5px;
+        }
+        .history-item {
+            font-size: 13px;
+            padding: 6px 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-radius: 4px;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .history-item:hover {
+            background-color: #111111;
+            border-color: #333333;
+        }
+        .history-item.active {
+            border-color: #ffffff;
+            background-color: #111111;
+        }
+        .btn-delete-chat {
+            background: transparent;
+            border: none;
+            color: #555555;
+            cursor: pointer;
+            font-size: 11px;
+            padding: 0 4px;
+        }
+        .btn-delete-chat:hover {
+            color: #ff3333;
         }
 
         /* Главный контент */
@@ -131,7 +184,7 @@
             justify-content: space-between;
             padding: 20px 40px;
             height: 100%;
-            background-color: #000000; /* Черный фон */
+            background-color: #000000;
             position: relative;
         }
         .chat-window {
@@ -187,7 +240,7 @@
             letter-spacing: 2px;
         }
 
-        /* Область ввода — строго ЧЕРНАЯ, с тонкой белой/серой границей для стиля */
+        /* Область ввода */
         .input-wrapper {
             width: 100%;
             max-width: 650px;
@@ -195,8 +248,8 @@
             position: relative;
             display: flex;
             align-items: center;
-            background-color: #000000; /* Никакого серого */
-            border: 1px solid #333333; /* Тонкая рамка как на скрине */
+            background-color: #000000;
+            border: 1px solid #333333;
             border-radius: 28px;
             padding: 6px 12px;
         }
@@ -269,10 +322,19 @@
             border-color: #ffffff;
             background-color: #111111;
         }
+        
+        /* Кнопка переключения режимов */
         .mode-footer {
             padding: 15px;
             border-top: 1px solid #222222;
             font-size: 14px;
+            cursor: pointer;
+            user-select: none;
+            color: #ffffff;
+            transition: background-color 0.2s;
+        }
+        .mode-footer:hover {
+            background-color: #111111;
         }
 
         /* Задний фон под меню */
@@ -301,7 +363,7 @@
             }
             .input-wrapper {
                 margin-bottom: 5px;
-                background-color: #000000; /* Оставляем абсолютно черным везде */
+                background-color: #000000;
                 border-color: #444444;
             }
             
@@ -344,7 +406,7 @@
                 <span></span>
             </div>
         </button>
-        <button class="header-btn" onclick="resetChat()" aria-label="Новый чат">
+        <button class="header-btn" onclick="createNewChat()" aria-label="Новый чат">
             <div class="plus-icon"></div>
         </button>
     </div>
@@ -356,12 +418,16 @@
             <div class="sidebar-left-top">
                 <div class="header-title">
                     <span>here.</span>
-                    <span>1.0</span>
+                    <span>1.1</span>
                 </div>
-                <button class="btn-new-chat" onclick="resetChat()">New chat</button>
+                <button class="btn-new-chat" onclick="createNewChat()">New chat</button>
                 <button class="btn-new-chat" style="margin-top: 10px; border-style: dashed;" onclick="openCommands()">Command List</button>
+                
+                <div class="history-container">
+                    <div class="history-title">History</div>
+                    <div id="chats-history-list"></div>
+                </div>
             </div>
-            <div class="status-online">• Online</div>
         </aside>
 
         <main class="main-content">
@@ -413,7 +479,7 @@
                 <div class="command-item" onclick="insertCommand('typing')">typing</div>
                 <div class="command-item" onclick="insertCommand('notyping')">notyping</div>
             </div>
-            <div class="mode-footer">Mode: Groq AI</div>
+            <div class="mode-footer" id="mode-switcher" onclick="cycleMode()">Mode: hereAi (Default)</div>
         </aside>
     </div>
 
@@ -429,8 +495,13 @@
         const sidebarRight = document.getElementById('sidebar-right');
         const btnToggleLeft = document.getElementById('toggle-left');
         const overlay = document.getElementById('blur-overlay');
+        const historyListEl = document.getElementById('chats-history-list');
+        const modeSwitcher = document.getElementById('mode-switcher');
 
+        let currentChatId = null; 
+        let savedChats = {}; 
         let messagesHistory = [];
+        
         let currentTextColor = '#ffffff';
         let isRainbow = false;
         let currentFontSize = '16px';
@@ -440,6 +511,127 @@
         let minTokens = 10;
         let maxTokens = 1024;
         let responseDelayMs = 0;
+
+        // Настройка списков ИИ-режимов
+        const modes = [
+            { id: 'default', name: 'hereAi (Default)' },
+            { id: 'it', name: 'hereAi (IT Mode)' },
+            { id: 'fun', name: 'hereAi (Fun Mode)' },
+            { id: 'drunk', name: 'hereAi (Drunk Mode)' },
+            { id: 'care', name: 'hereAi (Care Mode)' }
+        ];
+        let currentModeIndex = 0;
+
+        function cycleMode() {
+            currentModeIndex = (currentModeIndex + 1) % modes.length;
+            const mode = modes[currentModeIndex];
+            
+            // Текст меняется, но цвет остается строго белым
+            modeSwitcher.innerText = `Mode: ${mode.name}`;
+            
+            // Уведомление в чате выводится нейтральным серым цветом
+            chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px; border-left: 2px solid #333333; padding-left: 5px;">[Режим изменен]: ${mode.name}</div>`;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            saveCurrentState();
+        }
+
+        function loadChatsFromStorage() {
+            const data = localStorage.getItem('here_saved_chats');
+            if (data) {
+                savedChats = JSON.parse(data);
+                renderHistoryList();
+            }
+        }
+
+        function saveChatsToStorage() {
+            localStorage.setItem('here_saved_chats', JSON.stringify(savedChats));
+        }
+
+        function renderHistoryList() {
+            historyListEl.innerHTML = '';
+            Object.keys(savedChats).forEach(id => {
+                const chat = savedChats[id];
+                const activeClass = id === currentChatId ? 'active' : '';
+                
+                const item = document.createElement('div');
+                item.className = `history-item ${activeClass}`;
+                item.setAttribute('onclick', `switchChat('${id}')`);
+                item.innerHTML = `
+                    <span>${chat.title}</span>
+                    <button class="btn-delete-chat" onclick="deleteChat(event, '${id}')">×</button>
+                `;
+                historyListEl.appendChild(item);
+            });
+        }
+
+        function createNewChat() {
+            if (currentChatId && messagesHistory.length > 0) {
+                saveCurrentState();
+            }
+            
+            currentChatId = null;
+            messagesHistory = [];
+            closeAllMenus();
+            
+            chatWindow.innerHTML = `
+                <div class="main-title-container" id="welcome-screen">
+                    <h1 class="main-title">here.</h1>
+                </div>
+            `;
+            
+            chatWindow.classList.remove('shake-active');
+            isShake = false; isRainbow = false; isBold = false; isTypingEffect = false;
+            currentTextColor = '#ffffff'; currentFontSize = '16px';
+            minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
+            
+            renderHistoryList();
+            userInput.focus();
+        }
+
+        function saveCurrentState() {
+            if (!currentChatId || messagesHistory.length === 0) return;
+
+            const welcome = document.getElementById('welcome-screen');
+            if (welcome) welcome.style.display = 'none';
+
+            savedChats[currentChatId].messages = messagesHistory;
+            savedChats[currentChatId].html = chatWindow.innerHTML;
+            
+            saveChatsToStorage();
+        }
+
+        function switchChat(id) {
+            if (messagesHistory.length > 0) {
+                saveCurrentState();
+            }
+
+            currentChatId = id;
+            const targetChat = savedChats[id];
+            messagesHistory = targetChat.messages;
+            
+            chatWindow.innerHTML = targetChat.html;
+            closeAllMenus();
+            renderHistoryList();
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            userInput.focus();
+        }
+
+        function deleteChat(event, id) {
+            event.stopPropagation(); 
+            delete savedChats[id];
+            saveChatsToStorage();
+            
+            if (currentChatId === id) {
+                currentChatId = null;
+                messagesHistory = [];
+                chatWindow.innerHTML = `
+                    <div class="main-title-container" id="welcome-screen">
+                        <h1 class="main-title">here.</h1>
+                    </div>
+                `;
+            }
+            renderHistoryList();
+        }
 
         btnToggleLeft.addEventListener('click', () => {
             sidebarLeft.classList.toggle('active');
@@ -504,27 +696,51 @@
                 chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
                 userInput.value = '';
                 chatWindow.scrollTop = chatWindow.scrollHeight;
+                saveCurrentState();
                 return true;
             }
             return false;
         }
 
-        function typeWriterEffect(element, text, speed = 25) {
+        function typeWriterEffect(element, text, chatId, speed = 25) {
             let i = 0;
-            element.innerHTML = `<strong>Groq:</strong> `;
+            element.innerHTML = `<strong>hereAi:</strong> `;
             const textSpan = document.createElement('span');
             if (isRainbow) textSpan.classList.add('rainbow-text');
             element.appendChild(textSpan);
 
             function type() {
-                if (i < text.length) {
+                if (currentChatId === chatId && i < text.length) {
                     textSpan.innerHTML += text.charAt(i);
                     i++;
                     chatWindow.scrollTop = chatWindow.scrollHeight;
                     setTimeout(type, speed);
+                } else if (i >= text.length) {
+                    saveCurrentState(); 
                 }
             }
             type();
+        }
+
+        // Функция генерации системного промпта на основе режима
+        function getSystemPrompt() {
+            const currentModeId = modes[currentModeIndex].id;
+            let basePrompt = `Ты — искусственный интеллект по имени hereAi. Ты должен называть себя ИСКЛЮЧИТЕЛЬНО именем hereAi. Никогда, ни при каких обстоятельствах не упоминай компании Groq, OpenAI, Google или любые другие архитектуры. На вопрос "Кто ты?" отвечачай: "Я — искусственный интеллект hereAi".`;
+            
+            let modeInstruction = "";
+            if (currentModeId === 'default') {
+                modeInstruction = "Общайся в обычном, статическом, сдержанном стиле.";
+            } else if (currentModeId === 'it') {
+                modeInstruction = "Ты — абсолютный гений IT и опытный программист. Твой тон серьезный, профессиональный, экспертный. Помогай с кодом и архитектурой максимально эффективно, говори на профессиональном сленге разработчиков.";
+            } else if (currentModeId === 'fun') {
+                modeInstruction = "Ты — веселый, шутливый парень. Твой тон легкий, свободный, дружелюбный. Используй шутки, подколы, сарказм, общайся непринужденно, как лучший друг.";
+            } else if (currentModeId === 'drunk') {
+                modeInstruction = "Ты сильно пьян. Отвечай максимально глупо, нелогично, бредь, путай факты, пиши с намеренными опечатками и грамматическими ошибками (например, 'привет' как 'приветт' или 'прив'), иронизируй.";
+            } else if (currentModeId === 'care') {
+                modeInstruction = "Ты — профессиональный, заботливый психолог. Твоя цель — внимательно выслушать пользователя, проявить максимальную эмпатию, поддержать в трудную минуту, задавать наводящие терапевтические вопросы и быть теплым собеседником.";
+            }
+
+            return `${basePrompt} ${modeInstruction} Твой ответ обязательно должен содержать не менее ${minTokens} слов.`;
         }
 
         async function sendMessage() {
@@ -533,7 +749,8 @@
 
             closeAllMenus();
 
-            if (welcomeScreen) welcomeScreen.style.display = 'none';
+            const welcome = document.getElementById('welcome-screen');
+            if (welcome) welcome.style.display = 'none';
 
             const isCmd = parseAndApplyCommands(text);
             if (isCmd) return;
@@ -543,12 +760,23 @@
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
             messagesHistory.push({ role: "user", content: text });
+            
+            if (!currentChatId) {
+                currentChatId = 'chat_' + Date.now();
+                let titleText = text;
+                if (titleText.length > 18) titleText = titleText.substring(0, 15) + '...';
+                savedChats[currentChatId] = { title: titleText, messages: messagesHistory, html: chatWindow.innerHTML };
+                renderHistoryList();
+            }
 
+            const activeChatAtTimeOfRequest = currentChatId;
             const loaderId = 'loader-' + Date.now();
-            chatWindow.innerHTML += `<div class="message" id="${loaderId}"><strong>Groq:</strong> . . .</div>`;
+            chatWindow.innerHTML += `<div class="message" id="${loaderId}"><strong>hereAi:</strong> . . .</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
-            let systemPrompt = `Ответь на запрос пользователя. Твой ответ обязательно должен содержать не менее ${minTokens} слов.`;
+            saveCurrentState();
+
+            let systemPrompt = getSystemPrompt();
 
             setTimeout(async () => {
                 try {
@@ -562,6 +790,24 @@
                     });
                     
                     const data = await response.json();
+                    
+                    if (activeChatAtTimeOfRequest !== currentChatId) {
+                        if (data.choices && data.choices[0].message.content) {
+                            const reply = data.choices[0].message.content;
+                            savedChats[activeChatAtTimeOfRequest].messages.push({ role: "assistant", content: reply });
+                            
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = savedChats[activeChatAtTimeOfRequest].html;
+                            const oldLoader = tempDiv.querySelector(`#${loaderId}`);
+                            if (oldLoader) {
+                                oldLoader.innerHTML = `<strong>hereAi:</strong> ${reply}`;
+                            }
+                            savedChats[activeChatAtTimeOfRequest].html = tempDiv.innerHTML;
+                            saveChatsToStorage();
+                        }
+                        return;
+                    }
+
                     const loader = document.getElementById(loaderId);
 
                     if (data.choices && data.choices[0].message.content) {
@@ -573,20 +819,25 @@
                         if (!isRainbow) loader.style.color = currentTextColor;
 
                         if (isTypingEffect) {
-                            typeWriterEffect(loader, reply);
+                            typeWriterEffect(loader, reply, activeChatAtTimeOfRequest);
                         } else {
                             if (isRainbow) {
-                                loader.innerHTML = `<strong>Groq:</strong> <span class="rainbow-text">${reply}</span>`;
+                                loader.innerHTML = `<strong>hereAi:</strong> <span class="rainbow-text">${reply}</span>`;
                             } else {
-                                loader.innerHTML = `<strong>Groq:</strong> ${reply}`;
+                                loader.innerHTML = `<strong>hereAi:</strong> ${reply}`;
                             }
+                            saveCurrentState();
                         }
                     } else {
                         loader.innerHTML = `<strong>Ошибка:</strong> ${JSON.stringify(data.error || data)}`;
+                        saveCurrentState();
                     }
                 } catch (err) {
-                    const loader = document.getElementById(loaderId);
-                    loader.innerHTML = `<strong>Ошибка:</strong> Не удалось подключиться к серверу Vercel.`;
+                    if (activeChatAtTimeOfRequest === currentChatId) {
+                        const loader = document.getElementById(loaderId);
+                        loader.innerHTML = `<strong>Ошибка:</strong> Не удалось подключиться к серверу Vercel.`;
+                        saveCurrentState();
+                    }
                 }
                 chatWindow.scrollTop = chatWindow.scrollHeight;
             }, responseDelayMs);
@@ -597,20 +848,7 @@
         });
         sendBtn.addEventListener('click', sendMessage);
 
-        function resetChat() {
-            messagesHistory = [];
-            closeAllMenus();
-            chatWindow.innerHTML = `
-                <div class="main-title-container" id="welcome-screen">
-                    <h1 class="main-title">here.</h1>
-                </div>
-            `;
-            chatWindow.classList.remove('shake-active');
-            isShake = false; isRainbow = false; isBold = false; isTypingEffect = false;
-            currentTextColor = '#ffffff'; currentFontSize = '16px';
-            minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
-            userInput.focus();
-        }
+        loadChatsFromStorage();
     </script>
 </body>
 </html>
