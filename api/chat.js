@@ -6,15 +6,19 @@ export default async function handler(req, res) {
     const { messages } = req.body;
     const apiKey = process.env.CLAUDE_API_KEY; 
 
+    // Используем .my домен, раз личный кабинет открыт на нём. 
+    // Если снова будет fetch failed, заменим в этой строке .my на .ru
+    const API_URL = "https://api.aethercode.my/v1/chat/completions";
+
     try {
-        const response = await fetch("https://api.aethercode.my/v1/chat/completions", {
+        const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${apiKey}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: "claude-3-opus-20240229", // Если это имя неверно, сервер сам напишет в ответе правильный ID
+                model: "Claude Opus 4.8", // Прописываем ровно то название, которое на балансе
                 messages: messages.slice(-5),
                 max_tokens: 400 
             })
@@ -22,7 +26,6 @@ export default async function handler(req, res) {
 
         const data = await response.json();
 
-        // Если шлюз вернул ошибку, выводим её текст прямо в интерфейс чата
         if (data.error) {
             const msg = typeof data.error === 'object' ? (data.error.message || JSON.stringify(data.error)) : data.error;
             return res.status(200).json({
@@ -34,7 +37,7 @@ export default async function handler(req, res) {
 
     } catch (error) {
         return res.status(200).json({
-            choices: [{ message: { role: "assistant", content: `Сбой на сервере Vercel: ${error.message}` } }]
+            choices: [{ message: { role: "assistant", content: `Ошибка подключения к ${API_URL}: ${error.message}` } }]
         });
     }
 }
