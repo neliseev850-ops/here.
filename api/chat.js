@@ -6,9 +6,8 @@ export default async function handler(req, res) {
     const { messages } = req.body;
     const apiKey = process.env.CLAUDE_API_KEY; 
 
-    // Используем .my домен, раз личный кабинет открыт на нём. 
-    // Если снова будет fetch failed, заменим в этой строке .my на .ru
-    const API_URL = "https://api.aethercode.my/v1/chat/completions";
+    // Убираем префикс "api.", стучимся прямо на их основной рабочий домен .my
+    const API_URL = "https://aethercode.my/v1/chat/completions";
 
     try {
         const response = await fetch(API_URL, {
@@ -18,7 +17,7 @@ export default async function handler(req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                model: "Claude Opus 4.8", // Прописываем ровно то название, которое на балансе
+                model: "Claude Opus 4.8", // Твоя модель, без изменений
                 messages: messages.slice(-5),
                 max_tokens: 400 
             })
