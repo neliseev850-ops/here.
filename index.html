@@ -725,7 +725,7 @@
         // Функция генерации системного промпта на основе режима
         function getSystemPrompt() {
             const currentModeId = modes[currentModeIndex].id;
-            let basePrompt = `Ты — искусственный интеллект по имени hereAi. Ты должен называть себя ИСКЛЮЧИТЕЛЬНО именем hereAi. Никогда, ни при каких обстоятельствах не упоминай компании Groq, OpenAI, Google или любые другие архитектуры. На вопрос "Кто ты?" отвечачай: "Я — искусственный интеллект hereAi".`;
+            let basePrompt = `Ты — искусственный интеллект по имени hereAi.`;
             
             let modeInstruction = "";
             if (currentModeId === 'default') {
