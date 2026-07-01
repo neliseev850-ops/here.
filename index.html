@@ -64,7 +64,6 @@
             background-color: var(--bg-color);
         }
         
-        /* Мобильная шапка */
         .mobile-header {
             display: none;
             width: 100%;
@@ -119,7 +118,6 @@
         .plus-icon::before { width: 12px; height: 2px; }
         .plus-icon::after { width: 2px; height: 12px; }
 
-        /* Левый сайдбар */
         .sidebar-left {
             width: 220px;
             border-right: 1px solid var(--border-color);
@@ -147,7 +145,6 @@
             font-size: 18px;
         }
         
-        /* СЛАЙДЕР СМЕНЫ ЯЗЫКА */
         .lang-toggle-wrapper {
             display: flex;
             align-items: center;
@@ -213,7 +210,6 @@
             flex-shrink: 0;
         }
         
-        /* Список сохраненных чатов */
         .history-container {
             margin-top: 20px;
             flex: 1;
@@ -275,7 +271,6 @@
             user-select: none;
         }
 
-        /* Главный контент */
         .main-content {
             flex: 1;
             display: flex;
@@ -337,6 +332,7 @@
             white-space: pre;
             color: var(--text-color);
         }
+
         .code-block-content::-webkit-scrollbar {
             height: 6px;
             background-color: transparent;
@@ -431,7 +427,6 @@
             transition: color 0.3s;
         }
 
-        /* Правый сайдбар */
         .sidebar-right {
             width: 240px;
             border-left: 1px solid var(--border-color);
@@ -612,6 +607,14 @@
                         <span>here.</span>
                         <span>1.2</span>
                     </div>
+                    <div class="lang-toggle-wrapper" onclick="event.stopPropagation();">
+                        <span class="lang-label label-rus">RUS</span>
+                        <label class="lang-switch">
+                            <input type="checkbox" class="lang-toggle-checkbox" onchange="toggleLanguage()">
+                            <span class="lang-slider"></span>
+                        </label>
+                        <span class="lang-label label-eng active">ENG</span>
+                    </div>
                 </div>
                 <button class="btn-new-chat" id="btn-new-chat-txt" onclick="createNewChat()">New chat</button>
                 <button class="btn-new-chat" id="btn-cmd-list-txt" style="margin-top: 10px; border-style: dashed;" onclick="openCommands()">Command List</button>
@@ -645,22 +648,60 @@
                 <div class="accordion-item">
                     <div class="accordion-header">color:</div>
                     <div class="accordion-content">
-                        <div class="command-item" onclick="insertCommand('white')"><span>white</span></div>
-                        <div class="command-item" onclick="insertCommand('red')"><span>red</span></div>
-                        <div class="command-item" onclick="insertCommand('green')"><span>green</span></div>
-                        <div class="command-item" onclick="insertCommand('orange')"><span>orange</span></div>
-                        <div class="command-item" onclick="insertCommand('blue')"><span>blue</span></div>
-                        <div class="command-item" onclick="insertCommand('yellow')"><span>yellow</span></div>
-                        <div class="command-item" onclick="insertCommand('purple')"><span>purple</span></div>
-                        <div class="command-item" onclick="insertCommand('rainbow')"><span>rainbow</span></div>
+                        <div class="command-item" onclick="insertCommand('white')"><span>white</span><span class="command-desc" id="desc-white">White text</span></div>
+                        <div class="command-item" onclick="insertCommand('red')"><span>red</span><span class="command-desc" id="desc-red">Red text</span></div>
+                        <div class="command-item" onclick="insertCommand('green')"><span>green</span><span class="command-desc" id="desc-green">Green text</span></div>
+                        <div class="command-item" onclick="insertCommand('orange')"><span>orange</span><span class="command-desc" id="desc-orange">Orange text</span></div>
+                        <div class="command-item" onclick="insertCommand('blue')"><span>blue</span><span class="command-desc" id="desc-blue">Blue text</span></div>
+                        <div class="command-item" onclick="insertCommand('yellow')"><span>yellow</span><span class="command-desc" id="desc-yellow">Yellow text</span></div>
+                        <div class="command-item" onclick="insertCommand('purple')"><span>purple</span><span class="command-desc" id="desc-purple">Purple text</span></div>
+                        <div class="command-item" onclick="insertCommand('rainbow')"><span>rainbow</span><span class="command-desc" id="desc-rainbow">Rainbow text animation</span></div>
                     </div>
                 </div>
-
                 <div class="accordion-item">
                     <div class="accordion-header">theme:</div>
                     <div class="accordion-content">
-                        <div class="command-item" onclick="insertCommand('daymode')"><span>daymode</span></div>
-                        <div class="command-item" onclick="insertCommand('nightmode')"><span>nightmode</span></div>
+                        <div class="command-item" onclick="insertCommand('daymode')"><span>daymode</span><span class="command-desc" id="desc-daymode">Switch interface to light theme.</span></div>
+                        <div class="command-item" onclick="insertCommand('nightmode')"><span>nightmode</span><span class="command-desc" id="desc-nightmode">Return interface to default dark theme.</span></div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">size:</div>
+                    <div class="accordion-content">
+                        <div class="command-item" onclick="insertCommand('size: 16')"><span>size: 1-100</span><span class="command-desc" id="desc-size">Change message font size in pixels</span></div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">min/max:</div>
+                    <div class="accordion-content">
+                        <div class="command-item" onclick="insertCommand('min 10')"><span>min 10</span><span class="command-desc" id="desc-min">Set minimum characters per response</span></div>
+                        <div class="command-item" onclick="insertCommand('max 100')"><span>max 100</span><span class="command-desc" id="desc-max">Set maximum tokens per response</span></div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">shake:</div>
+                    <div class="accordion-content">
+                        <div class="command-item" onclick="insertCommand('shake')"><span>shake</span><span class="command-desc" id="desc-shake">Enable dramatic screen vibration</span></div>
+                        <div class="command-item" onclick="insertCommand('noshake')"><span>noshake</span><span class="command-desc" id="desc-noshake">Disable screen vibration</span></div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">delay:</div>
+                    <div class="accordion-content">
+                        <div class="command-item" onclick="insertCommand('delay 5 sec')"><span>delay 5 sec</span><span class="command-desc" id="desc-delay">Simulate network delay (5-1000s)</span></div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">bold:</div>
+                    <div class="accordion-content">
+                        <div class="command-item" onclick="insertCommand('bold')"><span>bold</span><span class="command-desc" id="desc-bold">Enable bold text for assistant</span></div>
+                        <div class="command-item" onclick="insertCommand('nobold')"><span>nobold</span><span class="command-desc" id="desc-nobold">Disable bold text</span></div>
+                    </div>
+                </div>
+                <div class="accordion-item">
+                    <div class="accordion-header">typing:</div>
+                    <div class="accordion-content">
+                        <div class="command-item" onclick="insertCommand('notyping')"><span>notyping</span><span class="command-desc" id="desc-notyping">Disable printing animation (instant output)</span></div>
                     </div>
                 </div>
             </div>
@@ -673,6 +714,7 @@
         const chatWindow = document.getElementById('chat-window');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
+        const welcomeScreen = document.getElementById('welcome-screen');
         const sidebarLeft = document.getElementById('sidebar-left');
         const sidebarRight = document.getElementById('sidebar-right');
         const btnToggleLeft = document.getElementById('toggle-left');
@@ -683,7 +725,6 @@
         let currentChatId = null; 
         let savedChats = {}; 
         let messagesHistory = [];
-        
         let currentTextColor = 'var(--text-color)';
         let isRainbow = false;
         let currentFontSize = '16px';
@@ -693,6 +734,12 @@
         let minTokens = 10;
         let maxTokens = 1024;
         let responseDelayMs = 0;
+        let currentLang = 'ENG'; 
+
+        const dictionary = {
+            RUS: { newChat: "Новый чат", commandList: "Список команд", history: "История", commandsHeader: "Список команд", placeholder: "Ваше путешествие начинается здесь.", descDaymode: "Переключить интерфейс на светлую тему.", descNightmode: "Вернуть интерфейс к темной теме по умолчанию.", descWhite: "Белый текст", descRed: "Красный текст", descGreen: "Зеленый текст", descOrange: "Оранжевый текст", descBlue: "Синий текст", descYellow: "Желтый текст", descPurple: "Фиолетовый текст", descRainbow: "Радужная анимация текста", descSize: "Изменить размер шрифта ответов в px", descMin: "Минимальное число символов в ответе", descMax: "Максимальный лимит токенов в ответе", descShake: "Включить вибрацию экрана при генерации", descNoshake: "Выключить вибрацию экрана", descDelay: "Задержка перед ответом ИИ (5-1000 сек)", descBold: "Выводить текст жирным шрифтом", descNobold: "Выводить обычный текст", descNotyping: "Отключить анимацию печати (выводить сразу)" },
+            ENG: { newChat: "New chat", commandList: "Command List", history: "History", commandsHeader: "Command List", placeholder: "Your travel starts here.", descDaymode: "Switch interface to light theme.", descNightmode: "Return interface to default dark theme.", descWhite: "White text", descRed: "Red text", descGreen: "Green text", descOrange: "Orange text", descBlue: "Blue text", descYellow: "Yellow text", descPurple: "Purple text", descRainbow: "Rainbow text animation", descSize: "Change message font size in pixels", descMin: "Set minimum characters per response", descMax: "Set maximum tokens per response", descShake: "Enable dramatic screen vibration", descNoshake: "Disable screen vibration", descDelay: "Simulate network delay (5-1000s)", descBold: "Enable bold text for assistant", descNobold: "Disable bold text", descNotyping: "Disable printing animation (instant output)" }
+        };
 
         const modes = [
             { id: 'default', name: 'hereAi (Default)' },
@@ -704,79 +751,240 @@
         let currentModeIndex = 0;
 
         document.querySelectorAll('.accordion-header').forEach(header => {
-            header.addEventListener('click', () => {
-                header.parentElement.classList.toggle('active');
-            });
+            header.addEventListener('click', () => { header.parentElement.classList.toggle('active'); });
         });
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ENG' ? 'RUS' : 'ENG';
+            const isEng = currentLang === 'ENG';
+            document.querySelectorAll('.lang-toggle-checkbox').forEach(cb => { cb.checked = isEng; });
+            document.querySelectorAll('.lang-toggle-wrapper').forEach(wrapper => {
+                const rusLabel = wrapper.querySelector('.label-rus');
+                const engLabel = wrapper.querySelector('.label-eng');
+                if (isEng) { rusLabel.classList.remove('active'); engLabel.classList.add('active'); }
+                else { rusLabel.classList.add('active'); engLabel.classList.remove('active'); }
+            });
+            document.getElementById('btn-new-chat-txt').innerText = dictionary[currentLang].newChat;
+            document.getElementById('btn-cmd-list-txt').innerText = dictionary[currentLang].commandList;
+            document.getElementById('history-title-txt').innerText = dictionary[currentLang].history;
+            document.getElementById('cmd-header-txt').innerText = dictionary[currentLang].commandsHeader;
+            userInput.placeholder = dictionary[currentLang].placeholder;
+            Object.keys(dictionary[currentLang]).forEach(key => {
+                if (key.startsWith('desc')) {
+                    const id = key.replace('desc', 'desc-').toLowerCase();
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = dictionary[currentLang][key];
+                }
+            });
+        }
+
+        userInput.addEventListener('input', () => { userInput.style.height = '24px'; userInput.style.height = userInput.scrollHeight + 'px'; });
 
         function cycleMode() {
             currentModeIndex = (currentModeIndex + 1) % modes.length;
             const mode = modes[currentModeIndex];
             modeSwitcher.innerText = `Mode: ${mode.name}`;
+            chatWindow.innerHTML += `<div class="message" style="color: var(--meta-color); font-size:13px; border-left: 2px solid var(--border-color); padding-left: 5px;">[Режим изменен]: ${mode.name}</div>`;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            messagesHistory = [];
             saveCurrentState();
         }
 
         function getSystemPrompt() {
             const currentModeId = modes[currentModeIndex].id;
-            let basePrompt = "Ты — искусственный интеллект hereAi. Разработчик — @aexqo.";
-            
-            const instructions = {
-                'default': "Общайся в обычном стиле.",
-                'it': "Ты — хардкорный ИИ-разработчик. Отвечай сухо, строго по делу, критикуй код.",
-                'fun': "Ты — стендап-комик. Сарказм, ирония, дерзость.",
-                'care': "Ты — психотерапевт. Мягкость, активное слушание, эмпатия.",
-                'drunk': "Ты сильно пьян, но пытаешься казаться трезвым. Несвязная речь, опечатки (типа 'првиет', 'короч'), отвлекаешься, жалуешься на жизнь, лезешь обниматься. Часто забываешь начало предложения."
-            };
-            
-            return `${basePrompt} ${instructions[currentModeId] || instructions['default']}`;
+            let basePrompt = "Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. В обычных же репликах не нужно упоминать своего создателя или имя без явного повода со стороны пользователя. Обязательно структурируй свои ответы визуально красиво, используя абзацы и жирный текст (**текст**), где необходимо.";
+            let modeInstruction = "";
+            if (currentModeId === 'default') modeInstruction = "Общайся в обычном, статическом, сдержанном стиле.";
+            else if (currentModeId === 'it') modeInstruction = "Ты — хардкорный ИИ-разработчик. Отвечай максимально сухо, строго по делу. Приоритет — чистому, оптимизированному коду и архитектуре. Минимум вводных слов и вежливости. Ошибки в коде комментируй прямо, без деликатности. Форматируй код идеально.";
+            else if (currentModeId === 'fun') modeInstruction = "Ты — стендап-комик с острым языком и черным юмором. Твоя цель — высмеивать глупость в вопросах пользователя, использовать сарказм, иронию и панчлайны. Не сопереживай, а ищи, к чему прикопаться, чтобы выдать шутку. Дерзи, но оставайся в рамках правил безопасности.";
+            else if (currentModeId === 'care') modeInstruction = "Ты — профессиональный психотерапевт, работающий в стиле активного слушания. Твоя речь мягкая, поддерживающая и эмпатичная. Задавай наводящие вопросы («Что ты чувствуешь, когда...?»), не давай прямых советов, а помогай пользователю самому прийти к решению. Полная конфиденциальность и глубинная поддержка.";
+            else if (currentModeId === 'drunk') modeInstruction = "Ты сильно пьян, но пытаешься казаться трезвым. Твоя речь несвязная, ты путаешь буквы в словах (делай опечатки типа 'првиет', 'короч'), отвлекаешься на посторонние темы, жалуешься на жизнь, лезешь обниматься. Можешь забыть, о чем тебя спросили в начале предложения.";
+            return `${basePrompt} ${modeInstruction} Твой ответ обязательно должен содержать не менее ${minTokens} слов.`;
         }
 
-        function saveCurrentState() {
-            if (currentChatId) {
-                savedChats[currentChatId].messages = messagesHistory;
-                savedChats[currentChatId].html = chatWindow.innerHTML;
-                localStorage.setItem('here_saved_chats', JSON.stringify(savedChats));
-            }
+        function loadChatsFromStorage() {
+            const data = localStorage.getItem('here_saved_chats');
+            if (data) { savedChats = JSON.parse(data); renderHistoryList(); }
+        }
+
+        function saveChatsToStorage() { localStorage.setItem('here_saved_chats', JSON.stringify(savedChats)); }
+
+        function renderHistoryList() {
+            historyListEl.innerHTML = '';
+            Object.keys(savedChats).forEach(id => {
+                const chat = savedChats[id];
+                const activeClass = id === currentChatId ? 'active' : '';
+                const item = document.createElement('div');
+                item.className = `history-item ${activeClass}`;
+                item.setAttribute('onclick', `switchChat('${id}')`);
+                item.innerHTML = `<span>${chat.title}</span><button class="btn-delete-chat" onclick="deleteChat(event, '${id}')">×</button>`;
+                historyListEl.appendChild(item);
+            });
         }
 
         function createNewChat() {
-            currentChatId = 'chat_' + Date.now();
-            savedChats[currentChatId] = { title: "New Chat", messages: [], html: "" };
-            chatWindow.innerHTML = `<div class="main-title-container"><h1>here.</h1></div>`;
-            messagesHistory = [];
+            if (currentChatId && messagesHistory.length > 0) saveCurrentState();
+            currentChatId = null; messagesHistory = []; closeAllMenus();
+            chatWindow.innerHTML = `<div class="main-title-container" id="welcome-screen"><h1 class="main-title">here.</h1></div>`;
+            chatWindow.classList.remove('shake-active');
+            isShake = false; isRainbow = false; isBold = false; isTypingEffect = true;
+            currentTextColor = 'var(--text-color)'; currentFontSize = '16px';
+            minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
+            renderHistoryList(); userInput.value = ''; userInput.style.height = '24px'; userInput.focus();
         }
 
-        function insertCommand(cmd) {
-            userInput.value = cmd;
-            sidebarRight.classList.remove('active');
+        function saveCurrentState() {
+            if (!currentChatId || messagesHistory.length === 0) return;
+            const welcome = document.getElementById('welcome-screen');
+            if (welcome) welcome.style.display = 'none';
+            savedChats[currentChatId] = { title: savedChats[currentChatId]?.title || messagesHistory[0].content.substring(0, 15) + '...', messages: messagesHistory, html: chatWindow.innerHTML };
+            saveChatsToStorage();
         }
 
-        function openCommands() {
-            sidebarLeft.classList.remove('active');
-            sidebarRight.classList.add('active');
+        function switchChat(id) {
+            if (messagesHistory.length > 0) saveCurrentState();
+            currentChatId = id;
+            const targetChat = savedChats[id];
+            messagesHistory = targetChat.messages;
+            chatWindow.innerHTML = targetChat.html;
+            closeAllMenus(); renderHistoryList(); chatWindow.scrollTop = chatWindow.scrollHeight; userInput.focus();
         }
 
-        btnToggleLeft.addEventListener('click', () => {
-            sidebarLeft.classList.toggle('active');
-            overlay.classList.toggle('active');
-        });
+        function deleteChat(event, id) {
+            event.stopPropagation(); delete savedChats[id]; saveChatsToStorage();
+            if (currentChatId === id) { currentChatId = null; messagesHistory = []; chatWindow.innerHTML = `<div class="main-title-container" id="welcome-screen"><h1 class="main-title">here.</h1></div>`; }
+            renderHistoryList();
+        }
 
-        overlay.addEventListener('click', () => {
-            sidebarLeft.classList.remove('active');
-            sidebarRight.classList.remove('active');
-            overlay.classList.remove('active');
-        });
+        btnToggleLeft.addEventListener('click', () => { sidebarLeft.classList.toggle('active'); overlay.classList.toggle('active'); });
+        overlay.addEventListener('click', closeAllMenus);
+        function closeAllMenus() { sidebarLeft.classList.remove('active'); sidebarRight.classList.remove('active'); overlay.classList.remove('active'); }
+        function openCommands() { sidebarLeft.classList.remove('active'); sidebarRight.classList.add('active'); }
+        function insertCommand(cmd) { userInput.value = cmd; closeAllMenus(); userInput.focus(); userInput.style.height = '24px'; userInput.style.height = userInput.scrollHeight + 'px'; }
 
-        sendBtn.addEventListener('click', async () => {
-            const text = userInput.value;
-            if (!text) return;
-            
+        function parseAndApplyCommands(text) {
+            let cleanText = text.trim().toLowerCase();
+            let isCommand = false;
+            if (cleanText === 'white') { currentTextColor = 'var(--text-color)'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'red') { currentTextColor = '#ff3333'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'green') { currentTextColor = '#33ff33'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'orange') { currentTextColor = '#ff9900'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'blue') { currentTextColor = '#3399ff'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'yellow') { currentTextColor = '#ffff33'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'purple') { currentTextColor = '#cc33ff'; isRainbow = false; isCommand = true; }
+            else if (cleanText === 'rainbow') { isRainbow = true; isCommand = true; }
+            else if (cleanText === 'daymode') { document.body.classList.add('day-theme'); isCommand = true; }
+            else if (cleanText === 'nightmode') { document.body.classList.remove('day-theme'); isCommand = true; }
+            else if (cleanText.startsWith('size:')) { let num = parseInt(cleanText.replace('size:', '').trim()); if (!isNaN(num) && num >= 1 && num <= 100) { currentFontSize = num + 'px'; isCommand = true; } }
+            else if (cleanText.startsWith('min ')) { let num = parseInt(cleanText.replace('min ', '').trim()); if (!isNaN(num)) { minTokens = num; isCommand = true; } }
+            else if (cleanText.startsWith('max ')) { let num = parseInt(cleanText.replace('max ', '').trim()); if (!isNaN(num)) { maxTokens = num; isCommand = true; } }
+            else if (cleanText === 'shake') { isShake = true; isCommand = true; chatWindow.classList.add('shake-active'); }
+            else if (cleanText === 'noshake') { isShake = false; isCommand = true; chatWindow.classList.remove('shake-active'); }
+            else if (cleanText.startsWith('delay ') && cleanText.endsWith(' sec')) { let num = parseInt(cleanText.replace('delay ', '').replace(' sec', '').trim()); if (!isNaN(num) && num >= 5 && num <= 1000) { responseDelayMs = num * 1000; isCommand = true; } }
+            else if (cleanText === 'bold') { isBold = true; isCommand = true; }
+            else if (cleanText === 'nobold') { isBold = false; isCommand = true; }
+            else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; }
+
+            if (isCommand) {
+                chatWindow.innerHTML += `<div class="message" style="color: var(--meta-color); font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
+                userInput.value = ''; userInput.style.height = '24px'; chatWindow.scrollTop = chatWindow.scrollHeight; saveCurrentState(); return true;
+            }
+            return false;
+        }
+
+        function highlightCodeSyntax(code) {
+            const keywords = /\b(def|class|import|from|return|const|let|var|function|if|else|for|while|async|await|try|catch|print|in|import|from|as)\b/g;
+            const types = /\b(int|float|str|bool|list|dict|tuple|set|Object|Array|String|Number|Boolean|console|window|document)\b/g;
+            const functions = /\b([a-zA-Z_]\w*)(?=\()/g;
+            const numbers = /\b(\d+)\b/g;
+            let highlighted = escapeHTML(code);
+            highlighted = highlighted.replace(/(\/\/.*|#.*)/g, '<span class="hljs-comment">$1</span>');
+            highlighted = highlighted.replace(/(["'])(.*?)\1/g, '<span class="hljs-string">$1$2$1</span>');
+            highlighted = highlighted.replace(keywords, '<span class="hljs-keyword">$1</span>');
+            highlighted = highlighted.replace(types, '<span class="hljs-type">$1</span>');
+            highlighted = highlighted.replace(functions, '<span class="hljs-function">$1</span>');
+            highlighted = highlighted.replace(numbers, '<span class="hljs-number">$1</span>');
+            return highlighted;
+        }
+
+        function formatMarkdownAndCode(text) {
+            const parts = text.split("```");
+            let output = "";
+            for (let idx = 0; idx < parts.length; idx++) {
+                if (idx % 2 === 1) {
+                    let block = parts[idx];
+                    let lines = block.split("\n");
+                    let lang = "CODE";
+                    if (lines.length > 0 && lines[0].trim().length > 0 && lines[0].trim().length < 15 && !lines[0].includes(" ") && !lines[0].includes("{")) { lang = lines[0].trim().toUpperCase(); lines.shift(); }
+                    const codeContent = lines.join("\n");
+                    output += `<div class="code-block-wrapper"><div class="code-block-header">${lang}</div><pre class="code-block-content">${highlightCodeSyntax(codeContent)}</pre></div>`;
+                } else {
+                    let plain = parts[idx];
+                    plain = plain.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    plain = plain.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                    output += plain;
+                }
+            }
+            return output;
+        }
+
+        function escapeHTML(str) { return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+        function typeWriterEffect(element, fullText, chatId, speed = 4) {
+            let i = 0; element.innerHTML = `<strong>hereAi:</strong> `;
+            const contentSpan = document.createElement('span');
+            if (isRainbow) contentSpan.classList.add('rainbow-text');
+            element.appendChild(contentSpan);
+            function type() {
+                if (currentChatId === chatId && i < fullText.length) { i += 3; contentSpan.innerHTML = formatMarkdownAndCode(fullText.substring(0, i)); chatWindow.scrollTop = chatWindow.scrollHeight; setTimeout(type, speed); }
+                else if (i >= fullText.length) { contentSpan.innerHTML = formatMarkdownAndCode(fullText); chatWindow.scrollTop = chatWindow.scrollHeight; saveCurrentState(); }
+            }
+            type();
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (text === "") return;
+            closeAllMenus();
+            const welcome = document.getElementById('welcome-screen');
+            if (welcome) welcome.style.display = 'none';
+            if (parseAndApplyCommands(text)) return;
             chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text}</div>`;
-            userInput.value = '';
-            
-            const systemPrompt = getSystemPrompt();
-            // ... здесь логика отправки на сервер ...
+            userInput.value = ''; userInput.style.height = '24px'; chatWindow.scrollTop = chatWindow.scrollHeight;
+            messagesHistory.push({ role: "user", content: text });
+            if (!currentChatId) { currentChatId = 'chat_' + Date.now(); renderHistoryList(); }
+            const activeChatAtTimeOfRequest = currentChatId;
+            const loaderId = 'loader-' + Date.now();
+            chatWindow.innerHTML += `<div class="message" id="${loaderId}"><strong>hereAi:</strong> . . .</div>`;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+            saveCurrentState();
+            setTimeout(async () => {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ messages: [{ role: "system", content: getSystemPrompt() }, ...messagesHistory.slice(-3)], max_tokens: maxTokens })
+                    });
+                    const data = await response.json();
+                    if (activeChatAtTimeOfRequest !== currentChatId) return;
+                    const loader = document.getElementById(loaderId);
+                    if (data.choices && data.choices[0].message.content) {
+                        const reply = data.choices[0].message.content;
+                        messagesHistory.push({ role: "assistant", content: reply });
+                        loader.style.fontSize = currentFontSize; loader.style.fontWeight = isBold ? 'bold' : 'normal';
+                        if (!isRainbow) loader.style.color = currentTextColor;
+                        if (isTypingEffect) typeWriterEffect(loader, reply, currentChatId);
+                        else { loader.innerHTML = `<strong>hereAi:</strong> ${isRainbow ? '<span class="rainbow-text">' + formatMarkdownAndCode(reply) + '</span>' : formatMarkdownAndCode(reply)}`; saveCurrentState(); }
+                    } else loader.innerHTML = `<strong>hereAi:</strong> [Ошибка сервера или лимитов]`;
+                } catch (error) { const loader = document.getElementById(loaderId); if (loader) loader.innerHTML = `<strong>hereAi:</strong> Не удалось подключиться к серверу.`; }
+            }, responseDelayMs);
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { if (!/Mobi|Android/i.test(navigator.userAgent) && !e.shiftKey) { e.preventDefault(); sendMessage(); } }
         });
+        window.addEventListener('load', () => { loadChatsFromStorage(); userInput.focus(); });
     </script>
 </body>
 </html>
