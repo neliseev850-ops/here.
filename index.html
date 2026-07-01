@@ -6,6 +6,36 @@
     <title>here. 1.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --border-color: #222222;
+            --input-border: #333333;
+            --input-bg: #000000;
+            --sidebar-bg: #000000;
+            --hover-bg: #111111;
+            --code-bg: #0d0d0d;
+            --code-header-bg: #161616;
+            --code-border: #222222;
+            --accent-color: #ffffff;
+            --meta-color: #777777;
+        }
+
+        .day-theme {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --border-color: #dddddd;
+            --input-border: #cccccc;
+            --input-bg: #ffffff;
+            --sidebar-bg: #f9f9f9;
+            --hover-bg: #f0f0f0;
+            --code-bg: #f4f4f4;
+            --code-header-bg: #e8e8e8;
+            --code-border: #cccccc;
+            --accent-color: #000000;
+            --meta-color: #555555;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -17,18 +47,21 @@
             -webkit-font-smoothing: none;
             -moz-osx-font-smoothing: none;
         }
+
         body, html {
             height: 100%;
             overflow: hidden;
-            background-color: #000000;
-            color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
+
         .container {
             display: flex;
             width: 100%;
             height: 100%;
             position: relative;
-            background-color: #000000;
+            background-color: var(--bg-color);
         }
         
         /* Мобильная шапка */
@@ -36,7 +69,8 @@
             display: none;
             width: 100%;
             height: 60px;
-            background-color: #000000;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid var(--border-color);
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
@@ -48,7 +82,7 @@
         .header-btn {
             background: transparent;
             border: none;
-            color: #ffffff;
+            color: var(--text-color);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -65,19 +99,19 @@
             display: block;
             width: 100%;
             height: 2px;
-            background-color: #ffffff;
+            background-color: var(--text-color);
         }
         .plus-icon {
             width: 24px;
             height: 24px;
-            border: 2px solid #ffffff;
+            border: 2px solid var(--text-color);
             border-radius: 50%;
             position: relative;
         }
         .plus-icon::before, .plus-icon::after {
             content: '';
             position: absolute;
-            background-color: #ffffff;
+            background-color: var(--text-color);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -88,12 +122,12 @@
         /* Левый сайдбар */
         .sidebar-left {
             width: 220px;
-            border-right: 1px solid #222222;
+            border-right: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background-color: #000000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: var(--sidebar-bg);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
         }
         .sidebar-left-top {
             padding: 15px 15px 5px 15px;
@@ -102,24 +136,80 @@
             flex: 1;
             overflow: hidden;
         }
-        .header-title {
+        .header-title-container {
             display: flex;
             justify-content: space-between;
-            font-size: 18px;
+            align-items: center;
             margin-bottom: 20px;
             flex-shrink: 0;
         }
+        .header-title {
+            font-size: 18px;
+        }
+        
+        /* СТИЛЬНЫЙ СЛАЙДЕР СМЕНЫ ЯЗЫКА */
+        .lang-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .lang-label {
+            font-size: 11px;
+            font-weight: bold;
+            color: var(--meta-color);
+            transition: color 0.3s;
+        }
+        .lang-label.active {
+            color: var(--text-color);
+        }
+        .lang-switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 18px;
+        }
+        .lang-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .lang-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: var(--bg-color);
+            border: 1px solid var(--text-color);
+            transition: 0.3s;
+            border-radius: 9px;
+        }
+        .lang-slider:before {
+            position: absolute;
+            content: "";
+            height: 10px;
+            width: 10px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-color);
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .lang-slider:before {
+            transform: translateX(16px);
+        }
+
         .btn-new-chat {
             display: block;
             width: 100%;
             padding: 8px 15px;
-            border: 1px solid #ffffff;
+            border: 1px solid var(--text-color);
             border-radius: 20px;
             text-align: left;
             background: transparent;
             cursor: pointer;
             font-size: 14px;
-            color: #ffffff;
+            color: var(--text-color);
             flex-shrink: 0;
         }
         
@@ -138,7 +228,7 @@
         .history-title {
             font-size: 11px;
             text-transform: uppercase;
-            color: #888888;
+            color: var(--meta-color);
             margin-bottom: 5px;
             padding-left: 5px;
         }
@@ -157,17 +247,17 @@
             align-items: center;
         }
         .history-item:hover {
-            background-color: #111111;
-            border-color: #333333;
+            background-color: var(--hover-bg);
+            border-color: var(--border-color);
         }
         .history-item.active {
-            border-color: #ffffff;
-            background-color: #111111;
+            border-color: var(--text-color);
+            background-color: var(--hover-bg);
         }
         .btn-delete-chat {
             background: transparent;
             border: none;
-            color: #555555;
+            color: var(--meta-color);
             cursor: pointer;
             font-size: 11px;
             padding: 0 4px;
@@ -180,9 +270,9 @@
         .sidebar-footer {
             padding: 15px;
             font-size: 12px;
-            color: #555555;
+            color: var(--meta-color);
             text-align: center;
-            border-top: 1px solid #111111;
+            border-top: 1px solid var(--border-color);
             user-select: none;
         }
 
@@ -194,8 +284,9 @@
             justify-content: space-between;
             padding: 20px 40px;
             height: 100%;
-            background-color: #000000;
+            background-color: var(--bg-color);
             position: relative;
+            transition: background-color 0.3s;
         }
         .chat-window {
             flex: 1;
@@ -203,7 +294,6 @@
             max-width: 700px;
             margin: 0 auto;
             overflow-y: auto;
-            white-space: pre-wrap;
             padding: 20px 0;
             display: flex;
             flex-direction: column;
@@ -215,26 +305,30 @@
         .message {
             line-height: 1.6;
             font-size: 16px;
+            white-space: pre-wrap;
             transition: color 0.3s, font-size 0.3s;
         }
         
-        /* СТИЛЬНОЕ ОКОШКО ДЛЯ КОДА (БЕЗ БЕЛЫХ И СЕРЫХ ПОЛОС) */
+        /* СТИЛЬНОЕ ОКОШКО ДЛЯ КОДА */
         .code-block-wrapper {
-            background-color: #0d0d0d;
-            border: 1px solid #222222;
+            background-color: var(--code-bg);
+            border: 1px solid var(--code-border);
             border-radius: 6px;
             margin: 12px 0;
             overflow: hidden;
+            transition: background-color 0.3s, border-color 0.3s;
         }
         .code-block-header {
-            background-color: #161616;
+            background-color: var(--code-header-bg);
             padding: 6px 14px;
             font-size: 11px;
-            color: #777777;
-            border-bottom: 1px solid #222222;
+            color: var(--meta-color);
+            border-bottom: 1px solid var(--code-border);
             text-transform: uppercase;
             letter-spacing: 1px;
-            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .code-block-content {
             padding: 14px;
@@ -243,18 +337,26 @@
             font-size: 14px;
             line-height: 1.5;
             white-space: pre;
-            background-color: #0d0d0d;
-            color: #ffffff;
-            
-            /* Полное скрытие полосок прокрутки на всех браузерах */
-            -ms-overflow-style: none !important;
-            scrollbar-width: none !important;
+            color: var(--text-color);
         }
+
+        /* Убираем белые полосы и настраиваем темный скроллбар для кода */
         .code-block-content::-webkit-scrollbar {
-            display: none !important;
-            width: 0px !important;
-            height: 0px !important;
+            height: 6px;
+            background-color: transparent;
         }
+        .code-block-content::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 3px;
+        }
+
+        /* Цвета синтаксической подсветки (а-ля VS Code Dark) */
+        .hljs-keyword { color: #ff79c6; font-weight: bold; }   /* Ключевые слова */
+        .hljs-string { color: #f1fa8c; }                    /* Строки */
+        .hljs-comment { color: #6272a4; font-style: italic; } /* Комментарии */
+        .hljs-number { color: #bd93f9; }                    /* Числа */
+        .hljs-function { color: #50fa7b; }                  /* Функции */
+        .hljs-type { color: #8be9fd; }                      /* Классы / Типы */
 
         @keyframes subtle-shake {
             0% { transform: translate(0, 0); }
@@ -289,65 +391,65 @@
             letter-spacing: 2px;
         }
 
-        /* Область ввода (поддерживает textarea) */
+        /* Область ввода (textarea) */
         .input-wrapper {
             width: 100%;
             max-width: 650px;
             margin: 0 auto 10px auto;
             position: relative;
             display: flex;
-            align-items: flex-end;
-            background-color: #000000;
-            border: 1px solid #333333;
+            align-items: center;
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
             border-radius: 20px;
-            padding: 4px 12px;
+            padding: 8px 14px;
+            transition: background-color 0.3s, border-color 0.3s;
         }
         .search-input {
             width: 100%;
-            padding: 10px 40px 10px 10px;
             border: none;
             font-size: 16px;
             outline: none;
             background: transparent;
-            color: #ffffff;
+            color: var(--text-color);
             resize: none;
-            height: 44px;
             max-height: 150px;
-            line-height: 1.4;
+            height: 24px;
+            line-height: 24px;
+            padding-right: 40px;
             overflow-y: auto;
+        }
+        .search-input::placeholder {
+            color: var(--meta-color);
         }
         .search-input::-webkit-scrollbar {
             width: 0px;
         }
-        .search-input::placeholder {
-            color: #757575;
-        }
         .enter-icon {
             position: absolute;
             right: 16px;
-            bottom: 12px;
             font-size: 20px;
             background: transparent;
             border: none;
             cursor: pointer;
-            color: #ffffff;
+            color: var(--text-color);
             opacity: 0.8;
-            user-select: none;
+            transition: color 0.3s;
         }
 
         /* Правый сайдбар */
         .sidebar-right {
             width: 240px;
-            border-left: 1px solid #222222;
+            border-left: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background-color: #000000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background-color: var(--sidebar-bg);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s;
         }
         .command-list-header {
             padding: 15px;
-            border-bottom: 1px solid #222222;
+            border-bottom: 1px solid var(--border-color);
             font-size: 14px;
             font-weight: bold;
             user-select: none;
@@ -358,86 +460,78 @@
             padding: 10px 15px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
         .commands-container::-webkit-scrollbar {
             width: 0px;
         }
 
-        /* Стильные раскрывающиеся группы команд */
-        .command-group {
-            border-bottom: 1px solid #111111;
+        /* Аккордеон команд */
+        .accordion-item {
+            border-bottom: 1px dashed var(--border-color);
             padding-bottom: 8px;
         }
-        .command-group-header {
+        .accordion-header {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--meta-color);
+            margin-top: 5px;
+            margin-bottom: 3px;
+            cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 12px;
-            text-transform: uppercase;
-            color: #888888;
-            cursor: pointer;
-            padding: 6px 4px;
             user-select: none;
-            transition: color 0.2s;
         }
-        .command-group-header:hover {
-            color: #ffffff;
-        }
-        .command-group-arrows {
-            font-size: 9px;
-            letter-spacing: -2px;
-            color: #555555;
+        .accordion-header::after {
+            content: '>>';
+            font-size: 10px;
             transition: transform 0.2s;
         }
-        .command-group.active .command-group-arrows {
+        .accordion-item.active .accordion-header::after {
             transform: rotate(90deg);
-            color: #ffffff;
         }
-        .command-group-content {
+        .accordion-content {
             display: none;
             flex-direction: column;
             gap: 8px;
-            margin-top: 6px;
-            padding-left: 4px;
+            padding-top: 5px;
         }
-        .command-group.active .command-group-content {
+        .accordion-item.active .accordion-content {
             display: flex;
         }
+
         .command-item {
             font-size: 13px;
             cursor: pointer;
-            padding: 6px 8px;
+            padding: 4px 6px;
             border: 1px dashed transparent;
-            border-radius: 4px;
             transition: all 0.2s;
             display: flex;
             flex-direction: column;
             gap: 2px;
-            background-color: #050505;
         }
         .command-item:hover {
-            border-color: #ffffff;
-            background-color: #111111;
+            border-color: var(--text-color);
+            background-color: var(--hover-bg);
         }
         .command-desc {
             font-size: 10px;
-            color: #555555;
-            line-height: 1.2;
+            color: var(--meta-color);
         }
         
         /* Кнопка переключения режимов */
         .mode-footer {
             padding: 15px;
-            border-top: 1px solid #222222;
+            border-top: 1px solid var(--border-color);
             font-size: 14px;
             cursor: pointer;
             user-select: none;
-            color: #ffffff;
+            color: var(--text-color);
             transition: background-color 0.2s;
         }
         .mode-footer:hover {
-            background-color: #111111;
+            background-color: var(--hover-bg);
         }
 
         /* Задний фон под меню */
@@ -466,8 +560,7 @@
             }
             .input-wrapper {
                 margin-bottom: 5px;
-                background-color: #000000;
-                border-color: #444444;
+                border-color: var(--input-border);
             }
             
             .sidebar-left {
@@ -480,9 +573,11 @@
                 width: 240px;
                 box-shadow: 5px 0 15px rgba(0,0,0,0.7);
             }
+            /* Фикс перекрытия бургера на мобильных */
             .sidebar-left-top {
-                padding-top: 75px; /* Отодвинули вниз, чтобы не резало на мобилках */
+                padding-top: 75px !important;
             }
+
             .sidebar-right {
                 position: absolute;
                 right: 0;
@@ -510,8 +605,18 @@
             <div class="burger-icon">
                 <span></span>
                 <span></span>
+                <span style="width: 100%; height: 2px; background-color: var(--text-color);"></span>
             </div>
         </button>
+        <!-- Мобильный слайдер языка -->
+        <div class="lang-toggle-wrapper" onclick="event.stopPropagation();">
+            <span class="lang-label label-rus">RUS</span>
+            <label class="lang-switch">
+                <input type="checkbox" class="lang-toggle-checkbox" onchange="toggleLanguage()">
+                <span class="lang-slider"></span>
+            </label>
+            <span class="lang-label label-eng active">ENG</span>
+        </div>
         <button class="header-btn" onclick="createNewChat()" aria-label="Новый чат">
             <div class="plus-icon"></div>
         </button>
@@ -522,15 +627,26 @@
     <div class="container">
         <aside class="sidebar-left" id="sidebar-left">
             <div class="sidebar-left-top">
-                <div class="header-title">
-                    <span>here.</span>
-                    <span>1.2</span>
+                <div class="header-title-container">
+                    <div class="header-title">
+                        <span>here.</span>
+                        <span>1.2</span>
+                    </div>
+                    <!-- Десктопный слайдер языка -->
+                    <div class="lang-toggle-wrapper" onclick="event.stopPropagation();">
+                        <span class="lang-label label-rus">RUS</span>
+                        <label class="lang-switch">
+                            <input type="checkbox" class="lang-toggle-checkbox" onchange="toggleLanguage()">
+                            <span class="lang-slider"></span>
+                        </label>
+                        <span class="lang-label label-eng active">ENG</span>
+                    </div>
                 </div>
-                <button class="btn-new-chat" onclick="createNewChat()">New chat</button>
-                <button class="btn-new-chat" style="margin-top: 10px; border-style: dashed;" onclick="openCommands()">Command List</button>
+                <button class="btn-new-chat" id="btn-new-chat-txt" onclick="createNewChat()">New chat</button>
+                <button class="btn-new-chat" id="btn-cmd-list-txt" style="margin-top: 10px; border-style: dashed;" onclick="openCommands()">Command List</button>
                 
                 <div class="history-container">
-                    <div class="history-title">History</div>
+                    <div class="history-title" id="history-title-txt">History</div>
                     <div id="chats-history-list"></div>
                 </div>
             </div>
@@ -547,157 +663,145 @@
             </div>
 
             <div class="input-wrapper">
-                <textarea id="user-input" class="search-input" placeholder="Напишите, чтобы говорить..." autofocus autocomplete="off" rows="1"></textarea>
+                <textarea id="user-input" class="search-input" placeholder="Your travel starts here." rows="1" autofocus autocomplete="off"></textarea>
                 <button class="enter-icon" id="send-btn">&#x21B5;</button>
             </div>
         </main>
 
         <aside class="sidebar-right" id="sidebar-right">
-            <div class="command-list-header">Command List</div>
+            <div class="command-list-header" id="cmd-header-txt">Command List</div>
             <div class="commands-container">
-                
-                <!-- ГРУППА: COLOR -->
-                <div class="command-group">
-                    <div class="command-group-header" onclick="toggleGroup(this)">
-                        <span>color:</span>
-                        <span class="command-group-arrows">&gt;&gt;</span>
-                    </div>
-                    <div class="command-group-content">
+                <!-- ГРУППА ЦВЕТОВ -->
+                <div class="accordion-item">
+                    <div class="accordion-header">color:</div>
+                    <div class="accordion-content">
                         <div class="command-item" onclick="insertCommand('white')">
                             <span>white</span>
-                            <span class="command-desc">Обычный белый текст по умолчанию.</span>
+                            <span class="command-desc" id="desc-white">White text</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('red')">
                             <span>red</span>
-                            <span class="command-desc">Ярко-красный шрифт сообщений.</span>
+                            <span class="command-desc" id="desc-red">Red text</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('green')">
                             <span>green</span>
-                            <span class="command-desc">Классический зеленый хакерский цвет.</span>
+                            <span class="command-desc" id="desc-green">Green text</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('orange')">
                             <span>orange</span>
-                            <span class="command-desc">Теплый оранжевый оттенок текста.</span>
+                            <span class="command-desc" id="desc-orange">Orange text</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('blue')">
                             <span>blue</span>
-                            <span class="command-desc">Насыщенный синий цвет вывода.</span>
+                            <span class="command-desc" id="desc-blue">Blue text</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('yellow')">
                             <span>yellow</span>
-                            <span class="command-desc">Светло-желтый цвет шрифта.</span>
+                            <span class="command-desc" id="desc-yellow">Yellow text</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('purple')">
                             <span>purple</span>
-                            <span class="command-desc">Фиолетовый киберпанк стиль.</span>
+                            <span class="command-desc" id="desc-purple">Purple text</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('rainbow')">
                             <span>rainbow</span>
-                            <span class="command-desc">Динамический переливающийся радужный текст.</span>
+                            <span class="command-desc" id="desc-rainbow">Rainbow text animation</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ГРУППА: SIZE -->
-                <div class="command-group">
-                    <div class="command-group-header" onclick="toggleGroup(this)">
-                        <span>size:</span>
-                        <span class="command-group-arrows">&gt;&gt;</span>
+                <!-- ГРУППА ТЕМЫ -->
+                <div class="accordion-item">
+                    <div class="accordion-header">theme:</div>
+                    <div class="accordion-content">
+                        <div class="command-item" onclick="insertCommand('daymode')">
+                            <span>daymode</span>
+                            <span class="command-desc" id="desc-daymode">Switch interface to light theme.</span>
+                        </div>
+                        <div class="command-item" onclick="insertCommand('nightmode')">
+                            <span>nightmode</span>
+                            <span class="command-desc" id="desc-nightmode">Return interface to default dark theme.</span>
+                        </div>
                     </div>
-                    <div class="command-group-content">
+                </div>
+
+                <!-- ГРУППА РАЗМЕРА -->
+                <div class="accordion-item">
+                    <div class="accordion-header">size:</div>
+                    <div class="accordion-content">
                         <div class="command-item" onclick="insertCommand('size: 16')">
                             <span>size: 1-100</span>
-                            <span class="command-desc">Задать размер шрифта ответов в пикселях.</span>
+                            <span class="command-desc" id="desc-size">Change message font size in pixels</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ГРУППА: LIMITS -->
-                <div class="command-group">
-                    <div class="command-group-header" onclick="toggleGroup(this)">
-                        <span>min/max:</span>
-                        <span class="command-group-arrows">&gt;&gt;</span>
-                    </div>
-                    <div class="command-group-content">
+                <!-- ГРУППА МИН/МАКС -->
+                <div class="accordion-item">
+                    <div class="accordion-header">min/max:</div>
+                    <div class="accordion-content">
                         <div class="command-item" onclick="insertCommand('min 10')">
                             <span>min 10</span>
-                            <span class="command-desc">Минимальное ограничение слов в ответе бота.</span>
+                            <span class="command-desc" id="desc-min">Set minimum characters per response</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('max 100')">
                             <span>max 100</span>
-                            <span class="command-desc">Максимальное ограничение длины вывода.</span>
+                            <span class="command-desc" id="desc-max">Set maximum tokens per response</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ГРУППА: SHAKE -->
-                <div class="command-group">
-                    <div class="command-group-header" onclick="toggleGroup(this)">
-                        <span>shake:</span>
-                        <span class="command-group-arrows">&gt;&gt;</span>
-                    </div>
-                    <div class="command-group-content">
+                <!-- ГРУППА SHAKE -->
+                <div class="accordion-item">
+                    <div class="accordion-header">shake:</div>
+                    <div class="accordion-content">
                         <div class="command-item" onclick="insertCommand('shake')">
                             <span>shake</span>
-                            <span class="command-desc">Эффект мелкого дрожания окна чата.</span>
+                            <span class="command-desc" id="desc-shake">Enable dramatic screen vibration</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('noshake')">
                             <span>noshake</span>
-                            <span class="command-desc">Отключить эффект мелкого дрожания.</span>
+                            <span class="command-desc" id="desc-noshake">Disable screen vibration</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ГРУППА: DELAY -->
-                <div class="command-group">
-                    <div class="command-group-header" onclick="toggleGroup(this)">
-                        <span>delay:</span>
-                        <span class="command-group-arrows">&gt;&gt;</span>
-                    </div>
-                    <div class="command-group-content">
+                <!-- ГРУППА DELAY -->
+                <div class="accordion-item">
+                    <div class="accordion-header">delay:</div>
+                    <div class="accordion-content">
                         <div class="command-item" onclick="insertCommand('delay 5 sec')">
                             <span>delay 5 sec</span>
-                            <span class="command-desc">Искусственная задержка ответа на 5 секунд.</span>
-                        </div>
-                        <div class="command-item" onclick="insertCommand('delay 100 sec')">
-                            <span>delay 100 sec</span>
-                            <span class="command-desc">Искусственная задержка ответа на 100 секунд.</span>
+                            <span class="command-desc" id="desc-delay">Simulate network delay (5-1000s)</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ГРУППА: BOLD -->
-                <div class="command-group">
-                    <div class="command-group-header" onclick="toggleGroup(this)">
-                        <span>bold:</span>
-                        <span class="command-group-arrows">&gt;&gt;</span>
-                    </div>
-                    <div class="command-group-content">
+                <!-- ГРУППА BOLD -->
+                <div class="accordion-item">
+                    <div class="accordion-header">bold:</div>
+                    <div class="accordion-content">
                         <div class="command-item" onclick="insertCommand('bold')">
                             <span>bold</span>
-                            <span class="command-desc">Делает весь выводимый текст полужирным.</span>
+                            <span class="command-desc" id="desc-bold">Enable bold text for assistant</span>
                         </div>
                         <div class="command-item" onclick="insertCommand('nobold')">
                             <span>nobold</span>
-                            <span class="command-desc">Снять полужирное начертание со шрифта.</span>
+                            <span class="command-desc" id="desc-nobold">Disable bold text</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- ГРУППА: TYPING -->
-                <div class="command-group">
-                    <div class="command-group-header" onclick="toggleGroup(this)">
-                        <span>typing:</span>
-                        <span class="command-group-arrows">&gt;&gt;</span>
-                    </div>
-                    <div class="command-group-content">
+                <!-- ГРУППА TYPING -->
+                <div class="accordion-item">
+                    <div class="accordion-header">typing:</div>
+                    <div class="accordion-content">
                         <div class="command-item" onclick="insertCommand('notyping')">
                             <span>notyping</span>
-                            <span class="command-desc">Отключить эффект посимвольной печати.</span>
+                            <span class="command-desc" id="desc-notyping">Disable printing animation (instant output)</span>
                         </div>
                     </div>
                 </div>
-
             </div>
             <div class="mode-footer" id="mode-switcher" onclick="cycleMode()">Mode: hereAi (Default)</div>
         </aside>
@@ -722,56 +826,132 @@
         let savedChats = {}; 
         let messagesHistory = [];
         
-        let currentTextColor = '#ffffff';
+        let currentTextColor = 'var(--text-color)';
         let isRainbow = false;
         let currentFontSize = '16px';
         let isBold = false;
         let isShake = false;
-        let isTypingEffect = true; 
+        let isTypingEffect = true;
         let minTokens = 10;
         let maxTokens = 1024;
         let responseDelayMs = 0;
+        let currentLang = 'ENG'; // Английский язык по умолчанию
+
+        // Языковой словарь для интерфейса
+        const dictionary = {
+            RUS: {
+                newChat: "Новый чат",
+                commandList: "Список команд",
+                history: "История",
+                commandsHeader: "Список команд",
+                placeholder: "Ваше путешествие начинается здесь.",
+                descDaymode: "Переключить интерфейс на светлую тему.",
+                descNightmode: "Вернуть интерфейс к темной теме по умолчанию.",
+                descWhite: "Белый текст",
+                descRed: "Красный текст",
+                descGreen: "Зеленый текст",
+                descOrange: "Оранжевый текст",
+                descBlue: "Синий текст",
+                descYellow: "Желтый текст",
+                descPurple: "Фиолетовый текст",
+                descRainbow: "Радужная анимация текста",
+                descSize: "Изменить размер шрифта ответов в px",
+                descMin: "Минимальное число символов в ответе",
+                descMax: "Максимальный лимит токенов в ответе",
+                descShake: "Включить вибрацию экрана при генерации",
+                descNoshake: "Выключить вибрацию экрана",
+                descDelay: "Задержка перед ответом ИИ (5-1000 сек)",
+                descBold: "Выводить текст жирным шрифтом",
+                descNobold: "Выводить обычный текст",
+                descNotyping: "Отключить анимацию печати (выводить сразу)"
+            },
+            ENG: {
+                newChat: "New chat",
+                commandList: "Command List",
+                history: "History",
+                commandsHeader: "Command List",
+                placeholder: "Your travel starts here.",
+                descDaymode: "Switch interface to light theme.",
+                descNightmode: "Return interface to default dark theme.",
+                descWhite: "White text",
+                descRed: "Red text",
+                descGreen: "Green text",
+                descOrange: "Orange text",
+                descBlue: "Blue text",
+                descYellow: "Yellow text",
+                descPurple: "Purple text",
+                descRainbow: "Rainbow text animation",
+                descSize: "Change message font size in pixels",
+                descMin: "Set minimum characters per response",
+                descMax: "Set maximum tokens per response",
+                descShake: "Enable dramatic screen vibration",
+                descNoshake: "Disable screen vibration",
+                descDelay: "Simulate network delay (5-1000s)",
+                descBold: "Enable bold text for assistant",
+                descNobold: "Disable bold text",
+                descNotyping: "Disable printing animation (instant output)"
+            }
+        };
 
         const modes = [
             { id: 'default', name: 'hereAi (Default)' },
-            { id: 'dev', name: 'hereAi (Dev Mode)' },
-            { id: 'joker', name: 'hereAi (Joker Mode)' },
-            { id: 'drunk', name: 'hereAi (Drunk Mode)' },
-            { id: 'therapist', name: 'hereAi (Therapist Mode)' }
+            { id: 'it', name: 'Dev Mode' },
+            { id: 'fun', name: 'Joker Mode' },
+            { id: 'care', name: 'Therapist Mode' }
         ];
         let currentModeIndex = 0;
 
-        
-        // ФУНКЦИЯ ДЛЯ СВОРАЧИВАНИЯ / РАЗВОРАЧИВАНИЯ КОМАНД
-        function toggleGroup(headerElement) {
-            const group = headerElement.parentElement;
-            const isActive = group.classList.contains('active');
-            
-            // Закрываем все остальные группы
-            document.querySelectorAll('.command-group').forEach(g => {
-                if (g !== group) g.classList.remove('active');
+        // Инициализация раскрытия аккордеонов правого сайдбара
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                item.classList.toggle('active');
+            });
+        });
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'ENG' ? 'RUS' : 'ENG';
+            const isEng = currentLang === 'ENG';
+
+            // Синхронизируем состояние всех чекбоксов на странице
+            document.querySelectorAll('.lang-toggle-checkbox').forEach(cb => {
+                cb.checked = isEng;
             });
 
-            // Переключаем текущую
-            if (isActive) {
-                group.classList.remove('active');
-            } else {
-                group.classList.add('active');
-            }
+            // Обновляем визуальную подсветку активной текстовой метки
+            document.querySelectorAll('.lang-toggle-wrapper').forEach(wrapper => {
+                const rusLabel = wrapper.querySelector('.label-rus');
+                const engLabel = wrapper.querySelector('.label-eng');
+                if (isEng) {
+                    rusLabel.classList.remove('active');
+                    engLabel.classList.add('active');
+                } else {
+                    rusLabel.classList.add('active');
+                    engLabel.classList.remove('active');
+                }
+            });
+
+            // Обновляем статические переводы интерфейса
+            document.getElementById('btn-new-chat-txt').innerText = dictionary[currentLang].newChat;
+            document.getElementById('btn-cmd-list-txt').innerText = dictionary[currentLang].commandList;
+            document.getElementById('history-title-txt').innerText = dictionary[currentLang].history;
+            document.getElementById('cmd-header-txt').innerText = dictionary[currentLang].commandsHeader;
+            userInput.placeholder = dictionary[currentLang].placeholder;
+
+            // Обновляем переводы команд
+            Object.keys(dictionary[currentLang]).forEach(key => {
+                if (key.startsWith('desc')) {
+                    const id = key.replace('desc', 'desc-').toLowerCase();
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = dictionary[currentLang][key];
+                }
+            });
         }
 
-        // Автоподстройка высоты для textarea (нового поля ввода)
-        userInput.addEventListener('input', function() {
-            this.style.height = 'auto';
-            const maxHeight = 150;
-            const newHeight = Math.min(this.scrollHeight, maxHeight);
-            this.style.height = newHeight + 'px';
-            
-            if (this.scrollHeight > maxHeight) {
-                this.style.overflowY = 'auto';
-            } else {
-                this.style.overflowY = 'hidden';
-            }
+        // Авто-увеличение высоты textarea при вводе
+        userInput.addEventListener('input', () => {
+            userInput.style.height = '24px';
+            userInput.style.height = userInput.scrollHeight + 'px';
         });
 
         function cycleMode() {
@@ -780,7 +960,7 @@
             
             modeSwitcher.innerText = `Mode: ${mode.name}`;
             
-            chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px; border-left: 2px solid #333333; padding-left: 5px;">[Режим изменен]: ${mode.name}</div>`;
+            chatWindow.innerHTML += `<div class="message" style="color: var(--meta-color); font-size:13px; border-left: 2px solid var(--border-color); padding-left: 5px;">[Режим изменен]: ${mode.name}</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
             messagesHistory = [];
@@ -833,12 +1013,12 @@
             
             chatWindow.classList.remove('shake-active');
             isShake = false; isRainbow = false; isBold = false; isTypingEffect = true;
-            currentTextColor = '#ffffff'; currentFontSize = '16px';
+            currentTextColor = 'var(--text-color)'; currentFontSize = '16px';
             minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
             
             renderHistoryList();
             userInput.value = '';
-            userInput.style.height = '44px';
+            userInput.style.height = '24px';
             userInput.focus();
         }
 
@@ -907,16 +1087,17 @@
 
         function insertCommand(cmd) {
             userInput.value = cmd;
-            userInput.dispatchEvent(new Event('input'));
             closeAllMenus();
             userInput.focus();
+            userInput.style.height = '24px';
+            userInput.style.height = userInput.scrollHeight + 'px';
         }
 
         function parseAndApplyCommands(text) {
             let cleanText = text.trim().toLowerCase();
             let isCommand = false;
 
-            if (cleanText === 'white') { currentTextColor = '#ffffff'; isRainbow = false; isCommand = true; }
+            if (cleanText === 'white') { currentTextColor = 'var(--text-color)'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'red') { currentTextColor = '#ff3333'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'green') { currentTextColor = '#33ff33'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'orange') { currentTextColor = '#ff9900'; isRainbow = false; isCommand = true; }
@@ -924,6 +1105,14 @@
             else if (cleanText === 'yellow') { currentTextColor = '#ffff33'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'purple') { currentTextColor = '#cc33ff'; isRainbow = false; isCommand = true; }
             else if (cleanText === 'rainbow') { isRainbow = true; isCommand = true; }
+            else if (cleanText === 'daymode') {
+                document.body.classList.add('day-theme');
+                isCommand = true;
+            }
+            else if (cleanText === 'nightmode') {
+                document.body.classList.remove('day-theme');
+                isCommand = true;
+            }
             else if (cleanText.startsWith('size:')) {
                 let num = parseInt(cleanText.replace('size:', '').trim());
                 if (!isNaN(num) && num >= 1 && num <= 100) { currentFontSize = num + 'px'; isCommand = true; }
@@ -947,9 +1136,9 @@
             else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; }
 
             if (isCommand) {
-                chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
+                chatWindow.innerHTML += `<div class="message" style="color: var(--meta-color); font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
                 userInput.value = '';
-                userInput.style.height = '44px';
+                userInput.style.height = '24px';
                 chatWindow.scrollTop = chatWindow.scrollHeight;
                 saveCurrentState();
                 return true;
@@ -957,82 +1146,79 @@
             return false;
         }
 
+        function highlightCodeSyntax(code) {
+            // Ключевые слова
+            const keywords = /\b(def|class|import|from|return|const|let|var|function|if|else|for|while|async|await|try|catch|print|in|import|from|as)\b/g;
+            // Типы данных
+            const types = /\b(int|float|str|bool|list|dict|tuple|set|Object|Array|String|Number|Boolean|console|window|document)\b/g;
+            // Вызовы функций
+            const functions = /\b([a-zA-Z_]\w*)(?=\()/g;
+            // Числа
+            const numbers = /\b(\d+)\b/g;
 
-        // ПРОФЕССИОНАЛЬНЫЙ СИНТАКСИЧЕСКИЙ ДЕКОРАТОР ДЛЯ СХЕМЫ Я.П. (Python, JS, C++ и т.д.)
-        function highlightCode(code) {
-            let escaped = escapeHTML(code);
-            
-            // Временный кэш токенов (защита от ложного форматирования слов внутри строк/комментариев)
-            const tokenCache = [];
-            let cacheIdx = 0;
-            
-            const pushToCache = (htmlContent) => {
-                const marker = `__TOKEN_PLACEHOLDER_${cacheIdx}__`;
-                tokenCache.push({ marker, htmlContent });
-                cacheIdx++;
-                return marker;
-            };
+            let highlighted = escapeHTML(code);
 
-            // 1. Определение строк: двойные, одинарные и обратные кавычки
-            escaped = escaped.replace(/(["'`])(.*?)\1/g, (match, quote, content) => {
-                return pushToCache(`<span style="color: #ce9178;">${quote}${content}${quote}</span>`);
-            });
+            // Комментарии (построчные)
+            highlighted = highlighted.replace(/(\/\/.*|#.*)/g, '<span class="hljs-comment">$1</span>');
 
-            // 2. Определение комментариев: строчные // и решетка # (Python style)
-            escaped = escaped.replace(/(\/\/.*|#.*)/g, (match) => {
-                return pushToCache(`<span style="color: #6a9955; font-style: italic;">${match}</span>`);
-            });
+            // Строки (двойные кавычки и одинарные)
+            highlighted = highlighted.replace(/(["'])(.*?)\1/g, '<span class="hljs-string">$1$2$1</span>');
 
-            // 3. Системные зарезервированные ключевые слова
-            const keywords = /\b(def|function|const|let|var|return|if|else|elif|for|while|import|from|class|try|catch|except|finally|as|with|in|and|or|not|is|true|false|none|null|undefined|public|private|static|void|int|float|double|char|bool|new|this|throw)\b/g;
-            escaped = escaped.replace(keywords, '<span style="color: #c586c0;">$1</span>');
+            // Ключевые слова
+            highlighted = highlighted.replace(keywords, '<span class="hljs-keyword">$1</span>');
 
-            // 4. Встроенные структуры, объекты, системные функции
-            const builtins = /\b(console|log|print|len|range|type|str|list|dict|set|tuple|open|window|document|Math|JSON|sys|os|path|Array|Object|String|Number|Boolean)\b/g;
-            escaped = escaped.replace(builtins, '<span style="color: #4fc1ff;">$1</span>');
+            // Типы
+            highlighted = highlighted.replace(types, '<span class="hljs-type">$1</span>');
 
-            // 5. Числовые константы
-            escaped = escaped.replace(/\b(\d+)\b/g, '<span style="color: #b5cea8;">$1</span>');
+            // Имена функций
+            highlighted = highlighted.replace(functions, '<span class="hljs-function">$1</span>');
 
-            // 6. Имена объявляемых или вызываемых функций
-            escaped = escaped.replace(/\b([a-zA-Z_]\w*)\s*(?=\()/g, '<span style="color: #dcdcaa;">$1</span>');
+            // Числа
+            highlighted = highlighted.replace(numbers, '<span class="hljs-number">$1</span>');
 
-            // Восстановление сохраненных элементов строк и комментариев из кэша
-            for (let i = tokenCache.length - 1; i >= 0; i--) {
-                escaped = escaped.replace(tokenCache[i].marker, tokenCache[i].htmlContent);
+            return highlighted;
+        }
+
+        function formatMarkdownAndCode(text) {
+            // Ищем тройные кавычки и заменяем их на блоки кода с синтаксической разметкой
+            const parts = text.split("```");
+            let output = "";
+
+            for (let idx = 0; idx < parts.length; idx++) {
+                if (idx % 2 === 1) {
+                    // Это блок кода
+                    let block = parts[idx];
+                    let lines = block.split("\n");
+                    let lang = "CODE";
+                    
+                    // Проверяем, указан ли язык в начале блока
+                    if (lines.length > 0 && lines[0].trim().length > 0 && lines[0].trim().length < 15 && !lines[0].includes(" ") && !lines[0].includes("{")) {
+                        lang = lines[0].trim().toUpperCase();
+                        lines.shift();
+                    }
+                    
+                    const codeContent = lines.join("\n");
+                    output += `<div class="code-block-wrapper"><div class="code-block-header">${lang}</div><pre class="code-block-content">${highlightCodeSyntax(codeContent)}</pre></div>`;
+                } else {
+                    // Обычный текст с поддержкой Markdown разметки
+                    let plain = parts[idx];
+                    
+                    // Форматируем жирный текст **текст**
+                    plain = plain.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    // Форматируем курсив *текст*
+                    plain = plain.replace(/\*(.*?)\*/g, '<em>$1</em>');
+                    
+                    output += plain;
+                }
             }
 
-            return escaped;
+            return output;
         }
 
         function escapeHTML(str) {
             return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
         }
 
-        function formatMarkdownAndCode(text) {
-            if (typeof text !== 'string') return '';
-            
-            // Динамический сборщик блоков кода
-            const markerPart1 = '`' + '`' + '`';
-            const codeBlockRegex = new RegExp(markerPart1 + '([a-zA-Z]*)\\n([\\s\\S]*?)\\n' + markerPart1, 'g');
-            let formatted = text;
-            
-            formatted = formatted.replace(codeBlockRegex, (match, language, code) => {
-                const highlighted = highlightCode(code);
-                const headerTitle = language ? language.toUpperCase() : 'CODE BLOCK';
-                return `<div class="code-block-wrapper"><div class="code-block-header">${headerTitle}</div><pre class="code-block-content">${highlighted}</pre></div>`;
-            });
-
-            // Форматируем жирный шрифт **текст**
-            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            
-            // Форматируем курсив *текст*
-            formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-            return formatted;
-        }
-
-        // БЫСТРЫЙ ЭФФЕКТ ТЕКСТОВОЙ ПЕЧАТИ (ПЕЧАТАЕТ ПО 3 СИМВОЛА СРАЗУ ДЛЯ СКОРОСТИ)
         function typeWriterEffect(element, fullText, chatId, speed = 4) {
             let i = 0;
             element.innerHTML = `<strong>hereAi:</strong> `;
@@ -1043,11 +1229,10 @@
 
             function type() {
                 if (currentChatId === chatId && i < fullText.length) {
-                    // Печатаем по кусочкам для высокой скорости
-                    let chunk = fullText.substr(i, 3);
+                    // Выдаем кусочками по 3 символа для максимального быстродействия
                     i += 3;
                     
-                    // Парсим разметку на лету для плавного отображения
+                    // Рендерим в реальном времени
                     contentSpan.innerHTML = formatMarkdownAndCode(fullText.substring(0, i));
                     chatWindow.scrollTop = chatWindow.scrollHeight;
                     setTimeout(type, speed);
@@ -1062,19 +1247,16 @@
 
         function getSystemPrompt() {
             const currentModeId = modes[currentModeIndex].id;
-            
-            let basePrompt = 'Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. Обязательно выделяй программный код с помощью тройных обратных кавычек ' + '`' + '`' + '`' + ', структурируй свои ответы визуально красиво, используя абзацы и жирный текст (**текст**), где необходимо.';
+            let basePrompt = "Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. В обычных же репликах не нужно упоминать своего создателя или имя без явного повода со стороны пользователя. Обязательно структурируй свои ответы визуально красиво, используя абзацы и жирный текст (**текст**), где необходимо.";
             
             let modeInstruction = "";
             if (currentModeId === 'default') {
                 modeInstruction = "Общайся в обычном, статическом, сдержанном стиле.";
-            } else if (currentModeId === 'dev') {
+            } else if (currentModeId === 'it') {
                 modeInstruction = "Ты — хардкорный ИИ-разработчик. Отвечай максимально сухо, строго по делу. Приоритет — чистому, оптимизированному коду и архитектуре. Минимум вводных слов и вежливости. Ошибки в коде комментируй прямо, без деликатности. Форматируй код идеально.";
-            } else if (currentModeId === 'joker') {
+            } else if (currentModeId === 'fun') {
                 modeInstruction = "Ты — стендап-комик с острым языком и черным юмором. Твоя цель — высмеивать глупость в вопросах пользователя, использовать сарказм, иронию и панчлайны. Не сопереживай, а ищи, к чему прикопаться, чтобы выдать шутку. Дерзи, но оставайся в рамках правил безопасности.";
-            } else if (currentModeId === 'drunk') {
-                modeInstruction = "Ты сильно пьян. Отвечай максимально глупо, нелогично, бредь, путай факты, пиши с намеренными опечатками и грамматическими ошибками (например, 'привет' как 'приветт' или 'прив'), иронизируй.";
-            } else if (currentModeId === 'therapist') {
+            } else if (currentModeId === 'care') {
                 modeInstruction = "Ты — профессиональный психотерапевт, работающий в стиле активного слушания. Твоя речь мягкая, поддерживающая и эмпатичная. Задавай наводящие вопросы («Что ты чувствуешь, когда...?»), не давай прямых советов, а помогай пользователю самому прийти к решению. Полная конфиденциальность и глубинная поддержка.";
             }
 
@@ -1093,9 +1275,9 @@
             const isCmd = parseAndApplyCommands(text);
             if (isCmd) return;
 
-            chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text.replace(/\n/g, '<br>')}</div>`;
+            chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text}</div>`;
             userInput.value = '';
-            userInput.style.height = '44px';
+            userInput.style.height = '24px';
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
             messagesHistory.push({ role: "user", content: text });
@@ -1181,18 +1363,22 @@
         }
 
         sendBtn.addEventListener('click', sendMessage);
-        
-        // Умная обработка клавиши Enter и Shift+Enter для Desktop и Mobile
+
+        // Умное разграничение нажатия клавиши Enter на телефонах и ПК
         userInput.addEventListener('keydown', (e) => {
+            const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+            
             if (e.key === 'Enter') {
-                const isMobile = window.innerWidth <= 768 || /Android|iPhone|iPad/i.test(navigator.userAgent);
-                if (e.shiftKey) {
-                    // Shift+Enter на компьютере - просто создаем перенос (дефолтное поведение textarea)
+                if (isMobile) {
+                    // На телефонах Enter просто переносит строку, отправки по Enter нет
+                    return;
                 } else {
-                    if (isMobile) {
-                        // На телефонах обычный Enter просто делает отступ (не отправляет)
+                    // На компьютерах:
+                    if (e.shiftKey) {
+                        // Shift + Enter переносит строку (стандартное поведение)
+                        return;
                     } else {
-                        // На компьютерах обычный Enter отправляет сообщение
+                        // Обычный Enter отправляет сообщение
                         e.preventDefault();
                         sendMessage();
                     }
