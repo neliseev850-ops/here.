@@ -547,7 +547,7 @@
         let currentFontSize = '16px';
         let isBold = false;
         let isShake = false;
-        let isTypingEffect = true; // Изменение: по умолчанию печать ВСЕГДА включена
+        let isTypingEffect = true; 
         let minTokens = 10;
         let maxTokens = 1024;
         let responseDelayMs = 0;
@@ -728,7 +728,7 @@
             }
             else if (cleanText === 'bold') { isBold = true; isCommand = true; }
             else if (cleanText === 'nobold') { isBold = false; isCommand = true; }
-            else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; } // Изменение: убрали команду typing, оставили только notyping
+            else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; }
 
             if (isCommand) {
                 chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
@@ -740,13 +740,184 @@
             return false;
         }
 
-        // КРАСИВЫЙ СИСТЕМНЫЙ ФОРМАТТЕР ДЛЯ СТРУКТУРИРОВАНИЯ ОТВЕТА И ВЫДЕЛЕНИЯ ОКОШЕК КОДА
+        // БЕЗОПАСНЫЙ СБОРЩИК РЕГУЛЯРНЫХ ВЫРАЖЕНИЙ (НЕ ЛОМАЕТ JS)
         function formatMarkdownAndCode(text) {
-            // Находим блоки кода ```код```
-            const codeBlockRegex = /
-http://googleusercontent.com/immersive_entry_chip/0
+            if (typeof text !== 'string') return '';
+            
+            // Собираем регулярку динамически, чтобы избежать конфликтов обратных кавычек в файле
+            const codeBlockRegex = new RegExp('`' + '`' + '`' + '(?:[a-zA-Z]*)\\n([\\s\\S]*?)\\n' + '`' + '`' + '`', 'g');
+            let formatted = text;
+            
+            formatted = formatted.replace(codeBlockRegex, (match, code) => {
+                return `<div class="code-block-wrapper"><div class="code-block-header">CODE BLOCK</div><pre class="code-block-content">${escapeHTML(code)}</pre></div>`;
+            });
 
-### Как обновить:
-1. Полностью замени код своего `index.html` на этот новый.
-2. Сделай коммит и отправь на GitHub.
-3. Дождись деплоя Vercel и проверяй. Код теперь пакуется в стильные хакерские боксы, текст печатается супер шустро, а разметка обрабатывается идеально!
+            // Форматируем жирный шрифт **текст**
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            
+            // Форматируем курсив *текст*
+            formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            return formatted;
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // БЫСТРЫЙ ЭФФЕКТ ТЕКСТОВОЙ ПЕЧАТИ (ПЕЧАТАЕТ ПО 3 СИМВОЛА ДЛЯ ВЫСОКОЙ СКОРОСТИ)
+        function typeWriterEffect(element, fullText, chatId, speed = 4) {
+            let i = 0;
+            element.innerHTML = `<strong>hereAi:</strong> `;
+            
+            const contentSpan = document.createElement('span');
+            if (isRainbow) contentSpan.classList.add('rainbow-text');
+            element.appendChild(contentSpan);
+
+            function type() {
+                if (currentChatId === chatId && i < fullText.length) {
+                    i += 3;
+                    contentSpan.innerHTML = formatMarkdownAndCode(fullText.substring(0, i));
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                    setTimeout(type, speed);
+                } else if (i >= fullText.length) {
+                    contentSpan.innerHTML = formatMarkdownAndCode(fullText);
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                    saveCurrentState(); 
+                }
+            }
+            type();
+        }
+
+        function getSystemPrompt() {
+            const currentModeId = modes[currentModeIndex].id;
+            
+            // Безопасно формируем промпт без использования обратных кавычек в тексте
+            let basePrompt = 'Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. Обязательно выделяй программный код с помощью тройных обратных кавычек ' + '`' + '`' + '`' + ', структурируй свои ответы визуально красиво, используя абзацы и жирный текст (**текст**), где необходимо.';
+            
+            let modeInstruction = "";
+            if (currentModeId === 'default') {
+                modeInstruction = "Общайся в обычном, статическом, сдержанном стиле.";
+            } else if (currentModeId === 'it') {
+                modeInstruction = "Ты — абсолютный гений IT и опытный программист. Твой тон серьезный, профессиональный, экспертный. Помогай с кодом и архитектурой максимально эффективно, говори на профессиональном сленге разработчиков.";
+            } else if (currentModeId === 'fun') {
+                modeInstruction = "Ты — веселый, шутливый парень. Твой тон легкий, свободный, дружелюбный. Используй шутки, подколы, сарказм, общайся непринужденно, как лучший друг.";
+            } else if (currentModeId === 'drunk') {
+                modeInstruction = "Ты сильно пьян. Отвечай максимально глупо, нелогично, бредь, путай факты, пиши с намеренными опечатками и грамматическими ошибками (например, 'привет' как 'приветт' или 'прив'), иронизируй.";
+            } else if (currentModeId === 'care') {
+                modeInstruction = "Ты — профессиональный, заботливый психолог. Твоя цель — внимательно выслушать пользователя, проявить максимальную эмпатию, поддержать в трудную минуту, задавать наводящие терапевтические вопросы и быть теплым собеседником.";
+            }
+
+            return `${basePrompt} ${modeInstruction} Твой ответ обязательно должен содержать не менее ${minTokens} слов.`;
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (text === "") return;
+
+            closeAllMenus();
+
+            const welcome = document.getElementById('welcome-screen');
+            if (welcome) welcome.style.display = 'none';
+
+            const isCmd = parseAndApplyCommands(text);
+            if (isCmd) return;
+
+            chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text}</div>`;
+            userInput.value = '';
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            messagesHistory.push({ role: "user", content: text });
+            
+            if (!currentChatId) {
+                currentChatId = 'chat_' + Date.now();
+                let titleText = text;
+                if (titleText.length > 18) titleText = titleText.substring(0, 15) + '...';
+                savedChats[currentChatId] = { title: titleText, messages: messagesHistory, html: chatWindow.innerHTML };
+                renderHistoryList();
+            }
+
+            const activeChatAtTimeOfRequest = currentChatId;
+            const loaderId = 'loader-' + Date.now();
+            chatWindow.innerHTML += `<div class="message" id="${loaderId}"><strong>hereAi:</strong> . . .</div>`;
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            saveCurrentState();
+
+            const limitedHistory = messagesHistory.slice(-3);
+            let systemPrompt = getSystemPrompt();
+
+            setTimeout(async () => {
+                try {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            messages: [{ role: "system", content: systemPrompt }, ...limitedHistory],
+                            max_tokens: maxTokens
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (activeChatAtTimeOfRequest !== currentChatId) {
+                        if (data.choices && data.choices[0].message.content) {
+                            const reply = data.choices[0].message.content;
+                            savedChats[activeChatAtTimeOfRequest].messages.push({ role: "assistant", content: reply });
+                            
+                            const tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = savedChats[activeChatAtTimeOfRequest].html;
+                            const oldLoader = tempDiv.querySelector(`#${loaderId}`);
+                            if (oldLoader) {
+                                oldLoader.innerHTML = `<strong>hereAi:</strong> ${formatMarkdownAndCode(reply)}`;
+                            }
+                            savedChats[activeChatAtTimeOfRequest].html = tempDiv.innerHTML;
+                            saveChatsToStorage();
+                        }
+                        return;
+                    }
+
+                    const loader = document.getElementById(loaderId);
+
+                    if (data.choices && data.choices[0].message.content) {
+                        const reply = data.choices[0].message.content;
+                        messagesHistory.push({ role: "assistant", content: reply });
+
+                        loader.style.fontSize = currentFontSize;
+                        loader.style.fontWeight = isBold ? 'bold' : 'normal';
+                        if (!isRainbow) loader.style.color = currentTextColor;
+
+                        if (isTypingEffect) {
+                            typeWriterEffect(loader, reply, currentChatId);
+                        } else {
+                            if (isRainbow) {
+                                loader.innerHTML = `<strong>hereAi:</strong> <span class="rainbow-text">${formatMarkdownAndCode(reply)}</span>`;
+                            } else {
+                                loader.innerHTML = `<strong>hereAi:</strong> ${formatMarkdownAndCode(reply)}`;
+                            }
+                            saveCurrentState();
+                        }
+                    } else {
+                        loader.innerHTML = `<strong>hereAi:</strong> [Ошибка сервера или лимитов]`;
+                        saveCurrentState();
+                    }
+                } catch (error) {
+                    const loader = document.getElementById(loaderId);
+                    if (loader) loader.innerHTML = `<strong>hereAi:</strong> Не удалось подключиться к серверу Vercel.`;
+                    console.error(error);
+                }
+            }, responseDelayMs);
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        window.addEventListener('load', () => {
+            loadChatsFromStorage();
+            userInput.focus();
+        });
+    </script>
+</body>
+</html>
