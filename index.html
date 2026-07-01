@@ -207,16 +207,44 @@
             padding: 20px 0;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 20px;
         }
         .chat-window::-webkit-scrollbar {
             width: 0px;
         }
         .message {
-            line-height: 1.5;
+            line-height: 1.6;
             font-size: 16px;
             transition: color 0.3s, font-size 0.3s;
         }
+        
+        /* СТИЛЬНОЕ ОКОШКО ДЛЯ КОДА */
+        .code-block-wrapper {
+            background-color: #0d0d0d;
+            border: 1px solid #222222;
+            border-radius: 6px;
+            margin: 12px 0;
+            overflow: hidden;
+        }
+        .code-block-header {
+            background-color: #161616;
+            padding: 6px 14px;
+            font-size: 11px;
+            color: #777777;
+            border-bottom: 1px solid #222222;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .code-block-content {
+            padding: 14px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            color: #33ff33; /* Зеленый цвет хакерской консоли для кода */
+            line-height: 1.4;
+            white-space: pre;
+        }
+
         @keyframes subtle-shake {
             0% { transform: translate(0, 0); }
             20% { transform: translate(-1px, 1px); }
@@ -489,7 +517,6 @@
                 <div class="command-item" onclick="insertCommand('nobold')">nobold</div>
 
                 <div class="command-group-title">typing:</div>
-                <div class="command-item" onclick="insertCommand('typing')">typing</div>
                 <div class="command-item" onclick="insertCommand('notyping')">notyping</div>
             </div>
             <div class="mode-footer" id="mode-switcher" onclick="cycleMode()">Mode: hereAi (Default)</div>
@@ -520,7 +547,7 @@
         let currentFontSize = '16px';
         let isBold = false;
         let isShake = false;
-        let isTypingEffect = false;
+        let isTypingEffect = true; // Изменение: по умолчанию печать ВСЕГДА включена
         let minTokens = 10;
         let maxTokens = 1024;
         let responseDelayMs = 0;
@@ -543,9 +570,7 @@
             chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px; border-left: 2px solid #333333; padding-left: 5px;">[Режим изменен]: ${mode.name}</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
 
-            // ИСПРАВЛЕНИЕ: Очищаем историю при смене мода, чтобы ИИ забыл старый контекст
             messagesHistory = [];
-            
             saveCurrentState();
         }
 
@@ -594,7 +619,7 @@
             `;
             
             chatWindow.classList.remove('shake-active');
-            isShake = false; isRainbow = false; isBold = false; isTypingEffect = false;
+            isShake = false; isRainbow = false; isBold = false; isTypingEffect = true;
             currentTextColor = '#ffffff'; currentFontSize = '16px';
             minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
             
@@ -703,8 +728,7 @@
             }
             else if (cleanText === 'bold') { isBold = true; isCommand = true; }
             else if (cleanText === 'nobold') { isBold = false; isCommand = true; }
-            else if (cleanText === 'typing') { isTypingEffect = true; isCommand = true; }
-            else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; }
+            else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; } // Изменение: убрали команду typing, оставили только notyping
 
             if (isCommand) {
                 chatWindow.innerHTML += `<div class="message" style="color: #888888; font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
@@ -716,154 +740,13 @@
             return false;
         }
 
-        function typeWriterEffect(element, text, chatId, speed = 25) {
-            let i = 0;
-            element.innerHTML = `<strong>hereAi:</strong> `;
-            const textSpan = document.createElement('span');
-            if (isRainbow) textSpan.classList.add('rainbow-text');
-            element.appendChild(textSpan);
+        // КРАСИВЫЙ СИСТЕМНЫЙ ФОРМАТТЕР ДЛЯ СТРУКТУРИРОВАНИЯ ОТВЕТА И ВЫДЕЛЕНИЯ ОКОШЕК КОДА
+        function formatMarkdownAndCode(text) {
+            // Находим блоки кода ```код```
+            const codeBlockRegex = /
+http://googleusercontent.com/immersive_entry_chip/0
 
-            function type() {
-                if (currentChatId === chatId && i < text.length) {
-                    textSpan.innerHTML += text.charAt(i);
-                    i++;
-                    chatWindow.scrollTop = chatWindow.scrollHeight;
-                    setTimeout(type, speed);
-                } else if (i >= text.length) {
-                    saveCurrentState(); 
-                }
-            }
-            type();
-        }
-
-        function getSystemPrompt() {
-            const currentModeId = modes[currentModeIndex].id;
-            let basePrompt = `Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. В обычных же репликах не нужно упоминать своего создателя или имя без явного повода со стороны пользователя.`;
-            
-            let modeInstruction = "";
-            if (currentModeId === 'default') {
-                modeInstruction = "Общайся в обычном, статическом, сдержанном стиле.";
-            } else if (currentModeId === 'it') {
-                modeInstruction = "Ты — абсолютный гений IT и опытный программист. Твой тон серьезный, профессиональный, экспертный. Помогай с кодом и архитектурой максимально эффективно, говори на профессиональном сленге разработчиков.";
-            } else if (currentModeId === 'fun') {
-                modeInstruction = "Ты — веселый, шутливый парень. Твой тон легкий, свободный, дружелюбный. Используй шутки, подколы, сарказм, общайся непринужденно, как лучший друг.";
-            } else if (currentModeId === 'drunk') {
-                modeInstruction = "Ты сильно пьян. Отвечай максимально глупо, нелогично, бредь, путай факты, пиши с намеренными опечатками и грамматическими ошибками (например, 'привет' как 'приветт' или 'прив'), иронизируй.";
-            } else if (currentModeId === 'care') {
-                modeInstruction = "Ты — профессиональный, заботливый психолог. Твоя цель — внимательно выслушать пользователя, проявить максимальную эмпатию, поддержать в трудную минуту, задавать наводящие терапевтические вопросы и быть теплым собеседником.";
-            }
-
-            return `${basePrompt} ${modeInstruction} Твой ответ обязательно должен содержать не менее ${minTokens} слов.`;
-        }
-
-        async function sendMessage() {
-            const text = userInput.value.trim();
-            if (text === "") return;
-
-            closeAllMenus();
-
-            const welcome = document.getElementById('welcome-screen');
-            if (welcome) welcome.style.display = 'none';
-
-            const isCmd = parseAndApplyCommands(text);
-            if (isCmd) return;
-
-            chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text}</div>`;
-            userInput.value = '';
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-
-            messagesHistory.push({ role: "user", content: text });
-            
-            if (!currentChatId) {
-                currentChatId = 'chat_' + Date.now();
-                let titleText = text;
-                if (titleText.length > 18) titleText = titleText.substring(0, 15) + '...';
-                savedChats[currentChatId] = { title: titleText, messages: messagesHistory, html: chatWindow.innerHTML };
-                renderHistoryList();
-            }
-
-            const activeChatAtTimeOfRequest = currentChatId;
-            const loaderId = 'loader-' + Date.now();
-            chatWindow.innerHTML += `<div class="message" id="${loaderId}"><strong>hereAi:</strong> . . .</div>`;
-            chatWindow.scrollTop = chatWindow.scrollHeight;
-
-            saveCurrentState();
-
-            // Ограничение истории для отправки на сервер (до 3 последних сообщений)
-            const limitedHistory = messagesHistory.slice(-3);
-            let systemPrompt = getSystemPrompt();
-
-            setTimeout(async () => {
-                try {
-                    const response = await fetch(API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            messages: [{ role: "system", content: systemPrompt }, ...limitedHistory],
-                            max_tokens: maxTokens
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    
-                    if (activeChatAtTimeOfRequest !== currentChatId) {
-                        if (data.choices && data.choices[0].message.content) {
-                            const reply = data.choices[0].message.content;
-                            savedChats[activeChatAtTimeOfRequest].messages.push({ role: "assistant", content: reply });
-                            
-                            const tempDiv = document.createElement('div');
-                            tempDiv.innerHTML = savedChats[activeChatAtTimeOfRequest].html;
-                            const oldLoader = tempDiv.querySelector(`#${loaderId}`);
-                            if (oldLoader) {
-                                oldLoader.innerHTML = `<strong>hereAi:</strong> ${reply}`;
-                            }
-                            savedChats[activeChatAtTimeOfRequest].html = tempDiv.innerHTML;
-                            saveChatsToStorage();
-                        }
-                        return;
-                    }
-
-                    const loader = document.getElementById(loaderId);
-
-                    if (data.choices && data.choices[0].message.content) {
-                        const reply = data.choices[0].message.content;
-                        messagesHistory.push({ role: "assistant", content: reply });
-
-                        loader.style.fontSize = currentFontSize;
-                        loader.style.fontWeight = isBold ? 'bold' : 'normal';
-                        if (!isRainbow) loader.style.color = currentTextColor;
-
-                        if (isTypingEffect) {
-                            typeWriterEffect(loader, reply, currentChatId);
-                        } else {
-                            if (isRainbow) {
-                                loader.innerHTML = `<strong>hereAi:</strong> <span class="rainbow-text">${reply}</span>`;
-                            } else {
-                                loader.innerHTML = `<strong>hereAi:</strong> ${reply}`;
-                            }
-                            saveCurrentState();
-                        }
-                    } else {
-                        loader.innerHTML = `<strong>hereAi:</strong> [Ошибка сервера или лимитов]`;
-                        saveCurrentState();
-                    }
-                } catch (error) {
-                    const loader = document.getElementById(loaderId);
-                    if (loader) loader.innerHTML = `<strong>hereAi:</strong> Не удалось подключиться к серверу Vercel.`;
-                    console.error(error);
-                }
-            }, responseDelayMs);
-        }
-
-        sendBtn.addEventListener('click', sendMessage);
-        userInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        window.addEventListener('load', () => {
-            loadChatsFromStorage();
-            userInput.focus();
-        });
-    </script>
-</body>
-</html>
+### Как обновить:
+1. Полностью замени код своего `index.html` на этот новый.
+2. Сделай коммит и отправь на GitHub.
+3. Дождись деплоя Vercel и проверяй. Код теперь пакуется в стильные хакерские боксы, текст печатается супер шустро, а разметка обрабатывается идеально!
