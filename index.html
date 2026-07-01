@@ -608,15 +608,6 @@
                 <span style="width: 100%; height: 2px; background-color: var(--text-color);"></span>
             </div>
         </button>
-        <!-- Мобильный слайдер языка -->
-        <div class="lang-toggle-wrapper" onclick="event.stopPropagation();">
-            <span class="lang-label label-rus">RUS</span>
-            <label class="lang-switch">
-                <input type="checkbox" class="lang-toggle-checkbox" onchange="toggleLanguage()">
-                <span class="lang-slider"></span>
-            </label>
-            <span class="lang-label label-eng active">ENG</span>
-        </div>
         <button class="header-btn" onclick="createNewChat()" aria-label="Новый чат">
             <div class="plus-icon"></div>
         </button>
@@ -632,7 +623,6 @@
                         <span>here.</span>
                         <span>1.2</span>
                     </div>
-                    <!-- Десктопный слайдер языка -->
                     <div class="lang-toggle-wrapper" onclick="event.stopPropagation();">
                         <span class="lang-label label-rus">RUS</span>
                         <label class="lang-switch">
@@ -671,7 +661,6 @@
         <aside class="sidebar-right" id="sidebar-right">
             <div class="command-list-header" id="cmd-header-txt">Command List</div>
             <div class="commands-container">
-                <!-- ГРУППА ЦВЕТОВ -->
                 <div class="accordion-item">
                     <div class="accordion-header">color:</div>
                     <div class="accordion-content">
@@ -710,7 +699,6 @@
                     </div>
                 </div>
 
-                <!-- ГРУППА ТЕМЫ -->
                 <div class="accordion-item">
                     <div class="accordion-header">theme:</div>
                     <div class="accordion-content">
@@ -725,7 +713,6 @@
                     </div>
                 </div>
 
-                <!-- ГРУППА РАЗМЕРА -->
                 <div class="accordion-item">
                     <div class="accordion-header">size:</div>
                     <div class="accordion-content">
@@ -736,7 +723,6 @@
                     </div>
                 </div>
 
-                <!-- ГРУППА МИН/МАКС -->
                 <div class="accordion-item">
                     <div class="accordion-header">min/max:</div>
                     <div class="accordion-content">
@@ -751,7 +737,6 @@
                     </div>
                 </div>
 
-                <!-- ГРУППА SHAKE -->
                 <div class="accordion-item">
                     <div class="accordion-header">shake:</div>
                     <div class="accordion-content">
@@ -766,7 +751,6 @@
                     </div>
                 </div>
 
-                <!-- ГРУППА DELAY -->
                 <div class="accordion-item">
                     <div class="accordion-header">delay:</div>
                     <div class="accordion-content">
@@ -777,7 +761,6 @@
                     </div>
                 </div>
 
-                <!-- ГРУППА BOLD -->
                 <div class="accordion-item">
                     <div class="accordion-header">bold:</div>
                     <div class="accordion-content">
@@ -792,7 +775,6 @@
                     </div>
                 </div>
 
-                <!-- ГРУППА TYPING -->
                 <div class="accordion-item">
                     <div class="accordion-header">typing:</div>
                     <div class="accordion-content">
@@ -835,9 +817,8 @@
         let minTokens = 10;
         let maxTokens = 1024;
         let responseDelayMs = 0;
-        let currentLang = 'ENG'; // Английский язык по умолчанию
+        let currentLang = 'ENG'; 
 
-        // Языковой словарь для интерфейса
         const dictionary = {
             RUS: {
                 newChat: "Новый чат",
@@ -901,7 +882,6 @@
         ];
         let currentModeIndex = 0;
 
-        // Инициализация раскрытия аккордеонов правого сайдбара
         document.querySelectorAll('.accordion-header').forEach(header => {
             header.addEventListener('click', () => {
                 const item = header.parentElement;
@@ -913,12 +893,10 @@
             currentLang = currentLang === 'ENG' ? 'RUS' : 'ENG';
             const isEng = currentLang === 'ENG';
 
-            // Синхронизируем состояние всех чекбоксов на странице
             document.querySelectorAll('.lang-toggle-checkbox').forEach(cb => {
                 cb.checked = isEng;
             });
 
-            // Обновляем визуальную подсветку активной текстовой метки
             document.querySelectorAll('.lang-toggle-wrapper').forEach(wrapper => {
                 const rusLabel = wrapper.querySelector('.label-rus');
                 const engLabel = wrapper.querySelector('.label-eng');
@@ -931,14 +909,12 @@
                 }
             });
 
-            // Обновляем статические переводы интерфейса
             document.getElementById('btn-new-chat-txt').innerText = dictionary[currentLang].newChat;
             document.getElementById('btn-cmd-list-txt').innerText = dictionary[currentLang].commandList;
             document.getElementById('history-title-txt').innerText = dictionary[currentLang].history;
             document.getElementById('cmd-header-txt').innerText = dictionary[currentLang].commandsHeader;
             userInput.placeholder = dictionary[currentLang].placeholder;
 
-            // Обновляем переводы команд
             Object.keys(dictionary[currentLang]).forEach(key => {
                 if (key.startsWith('desc')) {
                     const id = key.replace('desc', 'desc-').toLowerCase();
@@ -948,7 +924,6 @@
             });
         }
 
-        // Авто-увеличение высоты textarea при вводе
         userInput.addEventListener('input', () => {
             userInput.style.height = '24px';
             userInput.style.height = userInput.scrollHeight + 'px';
@@ -1147,71 +1122,42 @@
         }
 
         function highlightCodeSyntax(code) {
-            // Ключевые слова
             const keywords = /\b(def|class|import|from|return|const|let|var|function|if|else|for|while|async|await|try|catch|print|in|import|from|as)\b/g;
-            // Типы данных
             const types = /\b(int|float|str|bool|list|dict|tuple|set|Object|Array|String|Number|Boolean|console|window|document)\b/g;
-            // Вызовы функций
             const functions = /\b([a-zA-Z_]\w*)(?=\()/g;
-            // Числа
             const numbers = /\b(\d+)\b/g;
 
             let highlighted = escapeHTML(code);
-
-            // Комментарии (построчные)
             highlighted = highlighted.replace(/(\/\/.*|#.*)/g, '<span class="hljs-comment">$1</span>');
-
-            // Строки (двойные кавычки и одинарные)
             highlighted = highlighted.replace(/(["'])(.*?)\1/g, '<span class="hljs-string">$1$2$1</span>');
-
-            // Ключевые слова
             highlighted = highlighted.replace(keywords, '<span class="hljs-keyword">$1</span>');
-
-            // Типы
             highlighted = highlighted.replace(types, '<span class="hljs-type">$1</span>');
-
-            // Имена функций
             highlighted = highlighted.replace(functions, '<span class="hljs-function">$1</span>');
-
-            // Числа
             highlighted = highlighted.replace(numbers, '<span class="hljs-number">$1</span>');
-
             return highlighted;
         }
 
         function formatMarkdownAndCode(text) {
-            // Ищем тройные кавычки и заменяем их на блоки кода с синтаксической разметкой
             const parts = text.split("```");
             let output = "";
-
             for (let idx = 0; idx < parts.length; idx++) {
                 if (idx % 2 === 1) {
-                    // Это блок кода
                     let block = parts[idx];
                     let lines = block.split("\n");
                     let lang = "CODE";
-                    
-                    // Проверяем, указан ли язык в начале блока
                     if (lines.length > 0 && lines[0].trim().length > 0 && lines[0].trim().length < 15 && !lines[0].includes(" ") && !lines[0].includes("{")) {
                         lang = lines[0].trim().toUpperCase();
                         lines.shift();
                     }
-                    
                     const codeContent = lines.join("\n");
                     output += `<div class="code-block-wrapper"><div class="code-block-header">${lang}</div><pre class="code-block-content">${highlightCodeSyntax(codeContent)}</pre></div>`;
                 } else {
-                    // Обычный текст с поддержкой Markdown разметки
                     let plain = parts[idx];
-                    
-                    // Форматируем жирный текст **текст**
                     plain = plain.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-                    // Форматируем курсив *текст*
                     plain = plain.replace(/\*(.*?)\*/g, '<em>$1</em>');
-                    
                     output += plain;
                 }
             }
-
             return output;
         }
 
@@ -1222,17 +1168,12 @@
         function typeWriterEffect(element, fullText, chatId, speed = 4) {
             let i = 0;
             element.innerHTML = `<strong>hereAi:</strong> `;
-            
             const contentSpan = document.createElement('span');
             if (isRainbow) contentSpan.classList.add('rainbow-text');
             element.appendChild(contentSpan);
-
             function type() {
                 if (currentChatId === chatId && i < fullText.length) {
-                    // Выдаем кусочками по 3 символа для максимального быстродействия
                     i += 3;
-                    
-                    // Рендерим в реальном времени
                     contentSpan.innerHTML = formatMarkdownAndCode(fullText.substring(0, i));
                     chatWindow.scrollTop = chatWindow.scrollHeight;
                     setTimeout(type, speed);
@@ -1248,7 +1189,6 @@
         function getSystemPrompt() {
             const currentModeId = modes[currentModeIndex].id;
             let basePrompt = "Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. В обычных же репликах не нужно упоминать своего создателя или имя без явного повода со стороны пользователя. Обязательно структурируй свои ответы визуально красиво, используя абзацы и жирный текст (**текст**), где необходимо.";
-            
             let modeInstruction = "";
             if (currentModeId === 'default') {
                 modeInstruction = "Общайся в обычном, статическом, сдержанном стиле.";
@@ -1259,29 +1199,22 @@
             } else if (currentModeId === 'care') {
                 modeInstruction = "Ты — профессиональный психотерапевт, работающий в стиле активного слушания. Твоя речь мягкая, поддерживающая и эмпатичная. Задавай наводящие вопросы («Что ты чувствуешь, когда...?»), не давай прямых советов, а помогай пользователю самому прийти к решению. Полная конфиденциальность и глубинная поддержка.";
             }
-
             return `${basePrompt} ${modeInstruction} Твой ответ обязательно должен содержать не менее ${minTokens} слов.`;
         }
 
         async function sendMessage() {
             const text = userInput.value.trim();
             if (text === "") return;
-
             closeAllMenus();
-
             const welcome = document.getElementById('welcome-screen');
             if (welcome) welcome.style.display = 'none';
-
             const isCmd = parseAndApplyCommands(text);
             if (isCmd) return;
-
             chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text}</div>`;
             userInput.value = '';
             userInput.style.height = '24px';
             chatWindow.scrollTop = chatWindow.scrollHeight;
-
             messagesHistory.push({ role: "user", content: text });
-            
             if (!currentChatId) {
                 currentChatId = 'chat_' + Date.now();
                 let titleText = text;
@@ -1289,17 +1222,13 @@
                 savedChats[currentChatId] = { title: titleText, messages: messagesHistory, html: chatWindow.innerHTML };
                 renderHistoryList();
             }
-
             const activeChatAtTimeOfRequest = currentChatId;
             const loaderId = 'loader-' + Date.now();
             chatWindow.innerHTML += `<div class="message" id="${loaderId}"><strong>hereAi:</strong> . . .</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
-
             saveCurrentState();
-
             const limitedHistory = messagesHistory.slice(-3);
             let systemPrompt = getSystemPrompt();
-
             setTimeout(async () => {
                 try {
                     const response = await fetch(API_URL, {
@@ -1310,14 +1239,11 @@
                             max_tokens: maxTokens
                         })
                     });
-                    
                     const data = await response.json();
-                    
                     if (activeChatAtTimeOfRequest !== currentChatId) {
                         if (data.choices && data.choices[0].message.content) {
                             const reply = data.choices[0].message.content;
                             savedChats[activeChatAtTimeOfRequest].messages.push({ role: "assistant", content: reply });
-                            
                             const tempDiv = document.createElement('div');
                             tempDiv.innerHTML = savedChats[activeChatAtTimeOfRequest].html;
                             const oldLoader = tempDiv.querySelector(`#${loaderId}`);
@@ -1325,21 +1251,17 @@
                                 oldLoader.innerHTML = `<strong>hereAi:</strong> ${formatMarkdownAndCode(reply)}`;
                             }
                             savedChats[activeChatAtTimeOfRequest].html = tempDiv.innerHTML;
-                            saveChatsToStorage();
+                            saveCurrentState();
                         }
                         return;
                     }
-
                     const loader = document.getElementById(loaderId);
-
                     if (data.choices && data.choices[0].message.content) {
                         const reply = data.choices[0].message.content;
                         messagesHistory.push({ role: "assistant", content: reply });
-
                         loader.style.fontSize = currentFontSize;
                         loader.style.fontWeight = isBold ? 'bold' : 'normal';
                         if (!isRainbow) loader.style.color = currentTextColor;
-
                         if (isTypingEffect) {
                             typeWriterEffect(loader, reply, currentChatId);
                         } else {
@@ -1364,21 +1286,13 @@
 
         sendBtn.addEventListener('click', sendMessage);
 
-        // Умное разграничение нажатия клавиши Enter на телефонах и ПК
         userInput.addEventListener('keydown', (e) => {
             const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-            
             if (e.key === 'Enter') {
-                if (isMobile) {
-                    // На телефонах Enter просто переносит строку, отправки по Enter нет
-                    return;
-                } else {
-                    // На компьютерах:
-                    if (e.shiftKey) {
-                        // Shift + Enter переносит строку (стандартное поведение)
-                        return;
-                    } else {
-                        // Обычный Enter отправляет сообщение
+                if (isMobile) return;
+                else {
+                    if (e.shiftKey) return;
+                    else {
                         e.preventDefault();
                         sendMessage();
                     }
