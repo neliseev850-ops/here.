@@ -487,14 +487,17 @@
             root.style.setProperty('--text-color', text);
             root.style.setProperty('--accent-color', text);
             
-            // Динамические вспомогательные оттенки для рамок и мета-данных
-            root.style.setProperty('--border-color', text + '33'); // Прозрачность 20%
+            root.style.setProperty('--border-color', text + '33'); 
             root.style.setProperty('--input-border', text + '44');
-            root.style.setProperty('--meta-color', text + 'aa');   // Прозрачность ~66%
+            root.style.setProperty('--meta-color', text + 'aa');   
             root.style.setProperty('--hover-bg', text + '11');
             root.style.setProperty('--code-bg', text + '08');
             root.style.setProperty('--code-header-bg', text + '15');
             root.style.setProperty('--code-border', text + '22');
+
+            localStorage.setItem('here_theme_type', 'custom');
+            localStorage.setItem('here_theme_custom_bg', bg);
+            localStorage.setItem('here_theme_custom_text', text);
         }
 
         function resetCustomTheme() {
@@ -513,6 +516,24 @@
             root.style.removeProperty('--code-bg');
             root.style.removeProperty('--code-header-bg');
             root.style.removeProperty('--code-border');
+
+            localStorage.removeItem('here_theme_custom_bg');
+            localStorage.removeItem('here_theme_custom_text');
+        }
+
+        function loadThemeFromStorage() {
+            const themeType = localStorage.getItem('here_theme_type');
+            if (themeType === 'day') {
+                document.body.classList.add('day-theme');
+            } else if (themeType === 'custom') {
+                const bg = localStorage.getItem('here_theme_custom_bg');
+                const text = localStorage.getItem('here_theme_custom_text');
+                if (bg && text) {
+                    applyCustomTheme(bg, text);
+                }
+            } else {
+                document.body.classList.remove('day-theme');
+            }
         }
 
         function getSystemPrompt() {
@@ -605,10 +626,18 @@
             else if (cleanText === 'blue') { currentTextColor = '#3399ff'; isCommand = true; }
             else if (cleanText === 'yellow') { currentTextColor = '#ffff33'; isCommand = true; }
             else if (cleanText === 'purple') { currentTextColor = '#cc33ff'; isCommand = true; }
-            else if (cleanText === 'daymode') { resetCustomTheme(); document.body.classList.add('day-theme'); isCommand = true; }
-            else if (cleanText === 'nightmode') { resetCustomTheme(); document.body.classList.remove('day-theme'); isCommand = true; }
-            
-            // Команда кастомной темы: theme: #hex #hex
+            else if (cleanText === 'daymode') { 
+                resetCustomTheme(); 
+                document.body.classList.add('day-theme'); 
+                localStorage.setItem('here_theme_type', 'day');
+                isCommand = true; 
+            }
+            else if (cleanText === 'nightmode') { 
+                resetCustomTheme(); 
+                document.body.classList.remove('day-theme'); 
+                localStorage.setItem('here_theme_type', 'night');
+                isCommand = true; 
+            }
             else if (cleanText.startsWith('theme:')) {
                 const hexRegex = /#[0-9a-fA-F]{6}\b/g;
                 const matches = text.match(hexRegex);
@@ -619,8 +648,6 @@
                     feedbackMessage = `Кастомная тема успешно применена (Фон: ${matches[0]}, Текст: ${matches[1]}).`;
                 }
             }
-            
-            // Команда инверсии цветов: inverse
             else if (cleanText === 'inverse') {
                 if (customBgColor && customTextColor) {
                     applyCustomTheme(customTextColor, customBgColor);
@@ -631,7 +658,6 @@
                     feedbackMessage = "Ошибка: Сначала задайте кастомную тему с помощью команды 'theme: #HEX #HEX'";
                 }
             }
-            
             else if (cleanText.startsWith('size:')) { let num = parseInt(cleanText.replace('size:', '').trim()); if (!isNaN(num) && num >= 1 && num <= 100) { currentFontSize = num + 'px'; isCommand = true; } }
             else if (cleanText.startsWith('min ')) { let num = parseInt(cleanText.replace('min ', '').trim()); if (!isNaN(num)) { minTokens = num; isCommand = true; } }
             else if (cleanText.startsWith('max ')) { let num = parseInt(cleanText.replace('max ', '').trim()); if (!isNaN(num)) { maxTokens = num; isCommand = true; } }
@@ -783,7 +809,13 @@
 
         sendBtn.addEventListener('click', sendMessage);
         userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { if (!/Mobi|Android/i.test(navigator.userAgent) && !e.shiftKey) { e.preventDefault(); sendMessage(); } } });
-        window.addEventListener('load', () => { loadChatsFromStorage(); startSubTitleTyping(); userInput.focus(); });
+        
+        window.addEventListener('load', () => { 
+            loadThemeFromStorage(); 
+            loadChatsFromStorage(); 
+            startSubTitleTyping(); 
+            userInput.focus(); 
+        });
     </script>
 </body>
 </html>
