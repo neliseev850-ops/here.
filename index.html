@@ -33,7 +33,7 @@
             --code-header-bg: #e8e8e8;
             --code-border: #cccccc;
             --accent-color: #000000;
-            --meta-color: #555555;
+            --meta-color: #888888;
         }
 
         * { 
@@ -94,16 +94,54 @@
         .sidebar-footer { padding: 15px; font-size: 12px; color: var(--meta-color); text-align: center; border-top: 1px solid var(--border-color); user-select: none; }
 
         .main-content { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 40px; height: 100%; background-color: var(--bg-color); position: relative; transition: background-color 0.3s; }
-        .chat-window { flex: 1; width: 100%; max-width: 700px; margin: 0 auto; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; gap: 20px; }
+        .chat-window { flex: 1; width: 100%; max-width: 700px; margin: 0 auto; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; gap: 16px; }
         .chat-window::-webkit-scrollbar { width: 0px; }
         
-        .message { line-height: 1.6; font-size: 18px; white-space: pre-wrap; transition: color 0.3s, font-size 0.3s; }
+        .message-row { display: flex; width: 100%; margin-bottom: 4px; }
+        .message-row.user-row { justify-content: flex-end; }
+        .message-row.ai-row { justify-content: flex-start; }
+
+        .message { 
+            max-width: 80%; 
+            line-height: 1.5; 
+            font-size: 14px; 
+            white-space: pre-wrap; 
+            padding: 0; 
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background: transparent !important; 
+            color: var(--text-color);
+            transition: color 0.3s, font-size 0.3s;
+        }
+        .user-row .message { 
+            align-items: flex-end;
+            text-align: right;
+        }
+        .ai-row .message { 
+            align-items: flex-start;
+            text-align: left;
+        }
+        .system-msg {
+            width: 100%;
+            text-align: center;
+            color: var(--meta-color);
+            font-size: 12px;
+            margin: 8px 0;
+        }
+
+        .msg-meta {
+            font-size: 10px;
+            color: var(--meta-color);
+            margin-top: 2px;
+            user-select: none;
+        }
         
-        .code-block-wrapper { background-color: var(--code-bg); border: 1px solid var(--code-border); border-radius: 6px; margin: 12px 0; overflow: hidden; transition: background-color 0.3s, border-color 0.3s; }
+        .code-block-wrapper { background-color: var(--code-bg); border: 1px solid var(--code-border); border-radius: 6px; margin: 12px 0; overflow: hidden; transition: background-color 0.3s, border-color 0.3s; width: 100%; text-align: left; }
         .code-block-header { background-color: var(--code-header-bg); padding: 6px 14px; font-size: 11px; color: var(--meta-color); border-bottom: 1px solid var(--code-border); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
         
-        .code-block-content { padding: 14px; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 15px; line-height: 1.5; white-space: pre; color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important; }
-
+        .code-block-content { padding: 14px; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 13px; line-height: 1.5; white-space: pre; color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important; }
         .code-block-content::-webkit-scrollbar { height: 6px; background-color: transparent; }
         .code-block-content::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 3px; }
 
@@ -123,8 +161,6 @@
             100% { transform: translate(0, 0); }
         }
         .shake-active { animation: subtle-shake 0.2s infinite; }
-        .rainbow-text { background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 400% 100%; animation: rainbow-animation 8s linear infinite; display: inline-block; }
-        @keyframes rainbow-animation { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
         
         .main-title-container { 
             text-align: center; 
@@ -133,6 +169,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            width: 100%;
         }
         .main-title { 
             font-size: 64px; 
@@ -142,7 +179,6 @@
             font-weight: 400; 
         }
         
-        /* Сделали подзаголовок прям побольше (было 18px стало 26px) */
         .sub-title { 
             font-size: 26px; 
             color: var(--meta-color); 
@@ -154,7 +190,7 @@
 
         .input-wrapper { width: 100%; max-width: 650px; margin: 0 auto 10px auto; position: relative; display: flex; align-items: center; background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 20px; padding: 8px 14px; transition: background-color 0.3s, border-color 0.3s; }
         
-        .search-input { width: 100%; border: none; font-size: 18px; outline: none; background: transparent; color: var(--text-color); resize: none; max-height: 150px; height: 26px; line-height: 26px; padding-right: 40px; overflow-y: auto; }
+        .search-input { width: 100%; border: none; font-size: 16px; outline: none; background: transparent; color: var(--text-color); resize: none; max-height: 150px; height: 26px; line-height: 26px; padding-right: 40px; overflow-y: auto; }
         .search-input::placeholder { color: var(--meta-color); }
         .search-input::-webkit-scrollbar { width: 0px; }
         .enter-icon { position: absolute; right: 16px; font-size: 20px; background: transparent; border: none; cursor: pointer; color: var(--text-color); opacity: 0.8; transition: color 0.3s; }
@@ -254,7 +290,6 @@
                         <div class="command-item" onclick="insertCommand('blue')"><span>blue</span><span class="command-desc" id="desc-blue">Blue text</span></div>
                         <div class="command-item" onclick="insertCommand('yellow')"><span>yellow</span><span class="command-desc" id="desc-yellow">Yellow text</span></div>
                         <div class="command-item" onclick="insertCommand('purple')"><span>purple</span><span class="command-desc" id="desc-purple">Purple text</span></div>
-                        <div class="command-item" onclick="insertCommand('rainbow')"><span>rainbow</span><span class="command-desc" id="desc-rainbow">Rainbow text animation</span></div>
                     </div>
                 </div>
                 <div class="accordion-item">
@@ -262,11 +297,13 @@
                     <div class="accordion-content">
                         <div class="command-item" onclick="insertCommand('daymode')"><span>daymode</span><span class="command-desc" id="desc-daymode">Switch interface to light theme.</span></div>
                         <div class="command-item" onclick="insertCommand('nightmode')"><span>nightmode</span><span class="command-desc" id="desc-nightmode">Return interface to default dark theme.</span></div>
+                        <div class="command-item" onclick="insertCommand('theme: #B56B46 #3C3032')"><span>theme: #HEX #HEX</span><span class="command-desc" id="desc-customtheme">Set custom background and text colors</span></div>
+                        <div class="command-item" onclick="insertCommand('inverse')"><span>inverse</span><span class="command-desc" id="desc-inverse">Swap custom background and text colors</span></div>
                     </div>
                 </div>
                 <div class="accordion-item">
                     <div class="accordion-header">size:</div>
-                    <div class="accordion-content"><div class="command-item" onclick="insertCommand('size: 18')"><span>size: 1-100</span><span class="command-desc" id="desc-size">Change message font size in pixels</span></div></div>
+                    <div class="accordion-content"><div class="command-item" onclick="insertCommand('size: 14')"><span>size: 1-100</span><span class="command-desc" id="desc-size">Change message font size in pixels</span></div></div>
                 </div>
                 <div class="accordion-item">
                     <div class="accordion-header">min/max:</div>
@@ -318,8 +355,7 @@
         let savedChats = {}; 
         let messagesHistory = [];
         let currentTextColor = 'var(--text-color)';
-        let isRainbow = false;
-        let currentFontSize = '18px'; 
+        let currentFontSize = '14px'; 
         let isBold = false;
         let isShake = false;
         let isTypingEffect = true;
@@ -328,13 +364,17 @@
         let responseDelayMs = 0;
         let currentLang = 'ENG'; 
 
+        // Хранение текущих кастомных цветов для инверсии
+        let customBgColor = null;
+        let customTextColor = null;
+
         const dictionary = {
             RUS: { 
-                newChat: "Новый чат", commandList: "Список команд", history: "История", commandsHeader: "Список команд", placeholder: "Ваше путешествие начинается здесь.", descDaymode: "Переключить интерфейс на светлую тему.", descNightmode: "Вернуть интерфейс к темной теме по умолчанию.", descWhite: "Белый text", descRed: "Красный текст", descGreen: "Зеленый текст", descOrange: "Оранжевый текст", descBlue: "Синий текст", descYellow: "Желтый текст", descPurple: "Фиолетовый текст", descRainbow: "Радужная анимация текста", descSize: "Изменить размер шрифта ответов в px", descMin: "Минимальное число символов в ответе", descMax: "Максимальный лимит токенов в ответе", descShake: "Включить вибрацию экрана при генерации", descNoshake: "Выключить вибрацию экрана", descDelay: "Задержка перед ответом ИИ (5-1000 сек)", descBold: "Выводить текст жирным шрифтом", descNobold: "Выводить обычный текст", descNotyping: "Отключить анимацию печати (выводить сразу)",
+                newChat: "Новый чат", commandList: "Список команд", history: "История", commandsHeader: "Список команд", placeholder: "Ваше путешествие начинается здесь.", descDaymode: "Переключить интерфейс на светлую тему.", descNightmode: "Вернуть interface к темной теме.", descCustomtheme: "Задать свои цвета фона и текста через HEX", descInverse: "Поменять местами кастомные цвета фона и текста", descWhite: "Белый текст", descRed: "Красный текст", descGreen: "Зеленый текст", descOrange: "Оранжевый текст", descBlue: "Синий текст", descYellow: "Желтый текст", descPurple: "Фиолетовый текст", descSize: "Изменить размер шрифта ответов в px", descMin: "Минимальное число символов в ответе", descMax: "Максимальный лимит токенов в ответе", descShake: "Включить вибрацию экрана при генерации", descNoshake: "Выключить вибрацию экрана", descDelay: "Задержка перед ответом ИИ (5-1000 сек)", descBold: "Выводить текст жирным шрифтом", descNobold: "Выводить обычный текст", descNotyping: "Отключить анимацию печати (выводить сразу)",
                 subTitles: ["Чем займемся сегодня?", "В чем могу помочь?", "Что у тебя на уме?", "Давай создадим что-то крутое.", "Я готов слушать.", "Твой персональный ассистент.", "Начнем кодить?", "Есть идеи?", "Расскажи мне что-нибудь.", "Как прошел день?", "Давай решим задачу.", "Нужна помощь с кодом?", "Я здесь, чтобы помочь.", "О чем хочешь поговорить?", "Создаем новый проект?", "Давай обсудим идеи.", "Готов к работе.", "Просто напиши мне.", "Давай сделаем это.", "Жду твоего сообщения."] 
             },
             ENG: { 
-                newChat: "New chat", commandList: "Command List", history: "History", commandsHeader: "Command List", placeholder: "Your travel starts here.", descDaymode: "Switch interface to light theme.", descNightmode: "Return interface to default dark theme.", descWhite: "White text", descRed: "Red text", descGreen: "Green text", descOrange: "Orange text", descBlue: "Blue text", descYellow: "Yellow text", descPurple: "Purple text", descRainbow: "Rainbow text animation", descSize: "Change message font size in pixels", descMin: "Set minimum characters per response", descMax: "Set maximum tokens per response", descShake: "Enable dramatic screen vibration", descNoshake: "Disable screen vibration", descDelay: "Simulate network delay (5-1000s)", descBold: "Enable bold text for assistant", descNobold: "Disable bold text", descNotyping: "Disable printing animation (instant output)",
+                newChat: "New chat", commandList: "Command List", history: "History", commandsHeader: "Command List", placeholder: "Your travel starts here.", descDaymode: "Switch interface to light theme.", descNightmode: "Return interface to default dark theme.", descCustomtheme: "Set custom background and text colors", descInverse: "Swap custom background and text colors", descWhite: "White text", descRed: "Red text", descGreen: "Green text", descOrange: "Orange text", descBlue: "Blue text", descYellow: "Yellow text", descPurple: "Purple text", descSize: "Change message font size in pixels", descMin: "Set minimum characters per response", descMax: "Set maximum tokens per response", descShake: "Enable dramatic screen vibration", descNoshake: "Disable screen vibration", descDelay: "Simulate network delay (5-1000s)", descBold: "Enable bold text for assistant", descNobold: "Disable bold text", descNotyping: "Disable printing animation (instant output)",
                 subTitles: ["What shall we do today?", "How can I help you?", "What's on your mind?", "Let's create something cool.", "I'm ready to listen.", "Your personal assistant.", "Start coding?", "Got any ideas?", "Tell me something.", "How was your day?", "Let's solve a problem.", "Need help with code?", "I'm here to help.", "What do you want to talk about?", "Starting a new project?", "Let's discuss ideas.", "Ready to work.", "Just write to me.", "Let's do it.", "Waiting for your message."] 
             }
         };
@@ -342,7 +382,15 @@
         let subTitleInterval;
         let activeTypingTimeout = null;
 
-        /* Переписано: теперь элемент ищется динамически при каждом запуске, чтобы не терять ссылку после стирания innerHTML */
+        function getCurrentDateTimeStr() {
+            const now = new Date();
+            const dd = String(now.getDate()).padStart(2, '0');
+            const mo = String(now.getMonth() + 1).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            return `${dd}.${mo} ${hh}:${mm}`;
+        }
+
         function startSubTitleTyping() {
             clearInterval(subTitleInterval);
             if (activeTypingTimeout) clearInterval(activeTypingTimeout);
@@ -422,10 +470,49 @@
             currentModeIndex = (currentModeIndex + 1) % modes.length;
             const mode = modes[currentModeIndex];
             modeSwitcher.innerText = `Mode: ${mode.name}`;
-            chatWindow.innerHTML += `<div class="message" style="color: var(--meta-color); font-size:13px; border-left: 2px solid var(--border-color); padding-left: 5px;">[Режим изменен]: ${mode.name}</div>`;
+            chatWindow.innerHTML += `<div class="system-msg">[Режим изменен]: ${mode.name}</div>`;
             chatWindow.scrollTop = chatWindow.scrollHeight;
             messagesHistory = [];
             saveCurrentState();
+        }
+
+        function applyCustomTheme(bg, text) {
+            customBgColor = bg;
+            customTextColor = text;
+            
+            const root = document.documentElement;
+            root.style.setProperty('--bg-color', bg);
+            root.style.setProperty('--input-bg', bg);
+            root.style.setProperty('--sidebar-bg', bg);
+            root.style.setProperty('--text-color', text);
+            root.style.setProperty('--accent-color', text);
+            
+            // Динамические вспомогательные оттенки для рамок и мета-данных
+            root.style.setProperty('--border-color', text + '33'); // Прозрачность 20%
+            root.style.setProperty('--input-border', text + '44');
+            root.style.setProperty('--meta-color', text + 'aa');   // Прозрачность ~66%
+            root.style.setProperty('--hover-bg', text + '11');
+            root.style.setProperty('--code-bg', text + '08');
+            root.style.setProperty('--code-header-bg', text + '15');
+            root.style.setProperty('--code-border', text + '22');
+        }
+
+        function resetCustomTheme() {
+            customBgColor = null;
+            customTextColor = null;
+            const root = document.documentElement;
+            root.style.removeProperty('--bg-color');
+            root.style.removeProperty('--input-bg');
+            root.style.removeProperty('--sidebar-bg');
+            root.style.removeProperty('--text-color');
+            root.style.removeProperty('--accent-color');
+            root.style.removeProperty('--border-color');
+            root.style.removeProperty('--input-border');
+            root.style.removeProperty('--meta-color');
+            root.style.removeProperty('--hover-bg');
+            root.style.removeProperty('--code-bg');
+            root.style.removeProperty('--code-header-bg');
+            root.style.removeProperty('--code-border');
         }
 
         function getSystemPrompt() {
@@ -456,7 +543,6 @@
             });
         }
 
-        /* Исправлено: Сначала перерисовывается HTML, и сразу после этого функция находит новый элемент и запускает печать */
         function createNewChat() {
             if (currentChatId && messagesHistory.length > 0) saveCurrentState();
             currentChatId = null; messagesHistory = []; closeAllMenus();
@@ -464,8 +550,8 @@
             chatWindow.innerHTML = `<div class="main-title-container" id="welcome-screen"><h1 class="main-title">here.</h1><div class="sub-title" id="sub-title-dynamic"></div></div>`;
             
             chatWindow.classList.remove('shake-active');
-            isShake = false; isRainbow = false; isBold = false; isTypingEffect = true;
-            currentTextColor = 'var(--text-color)'; currentFontSize = '18px';
+            isShake = false; isBold = false; isTypingEffect = true;
+            currentTextColor = 'var(--text-color)'; currentFontSize = '14px';
             minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
             
             renderHistoryList(); userInput.value = ''; userInput.style.height = '26px'; userInput.focus();
@@ -510,16 +596,42 @@
         function parseAndApplyCommands(text) {
             let cleanText = text.trim().toLowerCase();
             let isCommand = false;
-            if (cleanText === 'white') { currentTextColor = 'var(--text-color)'; isRainbow = false; isCommand = true; }
-            else if (cleanText === 'red') { currentTextColor = '#ff3333'; isRainbow = false; isCommand = true; }
-            else if (cleanText === 'green') { currentTextColor = '#33ff33'; isRainbow = false; isCommand = true; }
-            else if (cleanText === 'orange') { currentTextColor = '#ff9900'; isRainbow = false; isCommand = true; }
-            else if (cleanText === 'blue') { currentTextColor = '#3399ff'; isRainbow = false; isCommand = true; }
-            else if (cleanText === 'yellow') { currentTextColor = '#ffff33'; isRainbow = false; isCommand = true; }
-            else if (cleanText === 'purple') { currentTextColor = '#cc33ff'; isRainbow = false; isCommand = true; }
-            else if (cleanText === 'rainbow') { isRainbow = true; isCommand = true; }
-            else if (cleanText === 'daymode') { document.body.classList.add('day-theme'); isCommand = true; }
-            else if (cleanText === 'nightmode') { document.body.classList.remove('day-theme'); isCommand = true; }
+            let feedbackMessage = "";
+
+            if (cleanText === 'white') { currentTextColor = 'var(--text-color)'; isCommand = true; }
+            else if (cleanText === 'red') { currentTextColor = '#ff3333'; isCommand = true; }
+            else if (cleanText === 'green') { currentTextColor = '#33ff33'; isCommand = true; }
+            else if (cleanText === 'orange') { currentTextColor = '#ff9900'; isCommand = true; }
+            else if (cleanText === 'blue') { currentTextColor = '#3399ff'; isCommand = true; }
+            else if (cleanText === 'yellow') { currentTextColor = '#ffff33'; isCommand = true; }
+            else if (cleanText === 'purple') { currentTextColor = '#cc33ff'; isCommand = true; }
+            else if (cleanText === 'daymode') { resetCustomTheme(); document.body.classList.add('day-theme'); isCommand = true; }
+            else if (cleanText === 'nightmode') { resetCustomTheme(); document.body.classList.remove('day-theme'); isCommand = true; }
+            
+            // Команда кастомной темы: theme: #hex #hex
+            else if (cleanText.startsWith('theme:')) {
+                const hexRegex = /#[0-9a-fA-F]{6}\b/g;
+                const matches = text.match(hexRegex);
+                if (matches && matches.length >= 2) {
+                    document.body.classList.remove('day-theme');
+                    applyCustomTheme(matches[0], matches[1]);
+                    isCommand = true;
+                    feedbackMessage = `Кастомная тема успешно применена (Фон: ${matches[0]}, Текст: ${matches[1]}).`;
+                }
+            }
+            
+            // Команда инверсии цветов: inverse
+            else if (cleanText === 'inverse') {
+                if (customBgColor && customTextColor) {
+                    applyCustomTheme(customTextColor, customBgColor);
+                    isCommand = true;
+                    feedbackMessage = "Цвета кастомной темы успешно инвертированы.";
+                } else {
+                    isCommand = true;
+                    feedbackMessage = "Ошибка: Сначала задайте кастомную тему с помощью команды 'theme: #HEX #HEX'";
+                }
+            }
+            
             else if (cleanText.startsWith('size:')) { let num = parseInt(cleanText.replace('size:', '').trim()); if (!isNaN(num) && num >= 1 && num <= 100) { currentFontSize = num + 'px'; isCommand = true; } }
             else if (cleanText.startsWith('min ')) { let num = parseInt(cleanText.replace('min ', '').trim()); if (!isNaN(num)) { minTokens = num; isCommand = true; } }
             else if (cleanText.startsWith('max ')) { let num = parseInt(cleanText.replace('max ', '').trim()); if (!isNaN(num)) { maxTokens = num; isCommand = true; } }
@@ -531,7 +643,8 @@
             else if (cleanText === 'notyping') { isTypingEffect = false; isCommand = true; }
 
             if (isCommand) {
-                chatWindow.innerHTML += `<div class="message" style="color: var(--meta-color); font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
+                const displayMsg = feedbackMessage || `Настройка "${text.trim()}" успешно применена.`;
+                chatWindow.innerHTML += `<div class="system-msg">[Система]: ${displayMsg}</div>`;
                 userInput.value = ''; userInput.style.height = '26px'; chatWindow.scrollTop = chatWindow.scrollHeight; saveCurrentState(); return true;
             }
             return false;
@@ -573,13 +686,8 @@
             return output;
         }
 
-        function typeWriterEffect(element, fullText, chatId, speed = 4) {
+        function typeWriterEffect(element, contentSpan, metaSpan, fullText, chatId, speed = 4) {
             let i = 0;
-            element.innerHTML = `<strong>hereAi:</strong> `;
-            const contentSpan = document.createElement('span');
-            contentSpan.style.whiteSpace = "pre-wrap"; 
-            element.appendChild(contentSpan);
-
             function type() {
                 if (currentChatId === chatId && i < fullText.length) {
                     i += 1;
@@ -588,6 +696,7 @@
                     setTimeout(type, speed);
                 } else if (i >= fullText.length) {
                     contentSpan.innerHTML = formatMarkdownAndCode(fullText);
+                    metaSpan.textContent = getCurrentDateTimeStr();
                     chatWindow.scrollTop = chatWindow.scrollHeight;
                     saveCurrentState();
                 }
@@ -602,15 +711,34 @@
             const welcome = document.getElementById('welcome-screen');
             if (welcome) welcome.style.display = 'none';
             if (parseAndApplyCommands(text)) return;
-            chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text}</div>`;
+            
+            const dateTimeStr = getCurrentDateTimeStr();
+            
+            chatWindow.innerHTML += `
+                <div class="message-row user-row">
+                    <div class="message">
+                        <span>${text}</span>
+                        <span class="msg-meta">${dateTimeStr}</span>
+                    </div>
+                </div>`;
+                
             userInput.value = ''; userInput.style.height = '26px'; chatWindow.scrollTop = chatWindow.scrollHeight;
             messagesHistory.push({ role: "user", content: text });
             if (!currentChatId) { currentChatId = 'chat_' + Date.now(); renderHistoryList(); }
             const activeChatAtTimeOfRequest = currentChatId;
             const loaderId = 'loader-' + Date.now();
-            chatWindow.innerHTML += `<div class="message" id="${loaderId}"><strong>hereAi:</strong> . . .</div>`;
+            
+            chatWindow.innerHTML += `
+                <div class="message-row ai-row">
+                    <div class="message" id="${loaderId}" style="font-size: ${currentFontSize}; font-weight: ${isBold ? 'bold' : 'normal'}; color: ${currentTextColor};">
+                        <span class="msg-content">. . .</span>
+                        <span class="msg-meta"></span>
+                    </div>
+                </div>`;
+                
             chatWindow.scrollTop = chatWindow.scrollHeight;
             saveCurrentState();
+            
             setTimeout(async () => {
                 try {
                     const response = await fetch(API_URL, {
@@ -620,16 +748,36 @@
                     });
                     const data = await response.json();
                     if (activeChatAtTimeOfRequest !== currentChatId) return;
-                    const loader = document.getElementById(loaderId);
+                    
+                    const loaderMessageEl = document.getElementById(loaderId);
+                    if (!loaderMessageEl) return;
+                    
+                    const contentSpan = loaderMessageEl.querySelector('.msg-content');
+                    const metaSpan = loaderMessageEl.querySelector('.msg-meta');
+                    
                     if (data.choices && data.choices[0].message.content) {
                         const reply = data.choices[0].message.content;
                         messagesHistory.push({ role: "assistant", content: reply });
-                        loader.style.fontSize = currentFontSize; loader.style.fontWeight = isBold ? 'bold' : 'normal';
-                        if (!isRainbow) loader.style.color = currentTextColor;
-                        if (isTypingEffect) typeWriterEffect(loader, reply, currentChatId);
-                        else { loader.innerHTML = `<strong>hereAi:</strong> ${isRainbow ? '<span class="rainbow-text">' + formatMarkdownAndCode(reply) + '</span>' : formatMarkdownAndCode(reply)}`; saveCurrentState(); }
-                    } else loader.innerHTML = `<strong>hereAi:</strong> [Ошибка сервера или лимитов]`;
-                } catch (error) { const loader = document.getElementById(loaderId); if (loader) loader.innerHTML = `<strong>hereAi:</strong> Не удалось подключиться к серверу.`; }
+                        
+                        if (isTypingEffect) {
+                            typeWriterEffect(loaderMessageEl, contentSpan, metaSpan, reply, currentChatId);
+                        } else {
+                            contentSpan.innerHTML = formatMarkdownAndCode(reply);
+                            metaSpan.textContent = getCurrentDateTimeStr();
+                            chatWindow.scrollTop = chatWindow.scrollHeight;
+                            saveCurrentState();
+                        }
+                    } else {
+                        contentSpan.innerHTML = `[Ошибка сервера]`;
+                        metaSpan.textContent = getCurrentDateTimeStr();
+                    }
+                } catch (error) { 
+                    const loaderMessageEl = document.getElementById(loaderId); 
+                    if (loaderMessageEl) {
+                        loaderMessageEl.querySelector('.msg-content').innerHTML = `Не удалось подключиться к серверу.`;
+                        loaderMessageEl.querySelector('.msg-meta').textContent = getCurrentDateTimeStr();
+                    } 
+                }
             }, responseDelayMs);
         }
 
