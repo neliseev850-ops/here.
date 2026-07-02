@@ -36,8 +36,25 @@
             --meta-color: #555555;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Courier Prime', 'Courier New', Courier, monospace; -webkit-tap-highlight-color: transparent; image-rendering: pixelated; font-smooth: never; -webkit-font-smoothing: none; -moz-osx-font-smoothing: none; }
-        body, html { height: 100%; overflow: hidden; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s, color 0.3s; }
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: 'Courier Prime', 'Courier New', Courier, monospace; 
+            -webkit-tap-highlight-color: transparent; 
+            image-rendering: pixelated; 
+            font-smooth: never; 
+            -webkit-font-smoothing: none; 
+            -moz-osx-font-smoothing: none; 
+        }
+        
+        body, html { 
+            height: 100%; 
+            overflow: hidden; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            transition: background-color 0.3s, color 0.3s; 
+        }
 
         .container { display: flex; width: 100%; height: 100%; position: relative; background-color: var(--bg-color); }
         
@@ -79,11 +96,13 @@
         .main-content { flex: 1; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 40px; height: 100%; background-color: var(--bg-color); position: relative; transition: background-color 0.3s; }
         .chat-window { flex: 1; width: 100%; max-width: 700px; margin: 0 auto; overflow-y: auto; padding: 20px 0; display: flex; flex-direction: column; gap: 20px; }
         .chat-window::-webkit-scrollbar { width: 0px; }
-        .message { line-height: 1.6; font-size: 16px; white-space: pre-wrap; transition: color 0.3s, font-size 0.3s; }
+        
+        .message { line-height: 1.6; font-size: 18px; white-space: pre-wrap; transition: color 0.3s, font-size 0.3s; }
         
         .code-block-wrapper { background-color: var(--code-bg); border: 1px solid var(--code-border); border-radius: 6px; margin: 12px 0; overflow: hidden; transition: background-color 0.3s, border-color 0.3s; }
         .code-block-header { background-color: var(--code-header-bg); padding: 6px 14px; font-size: 11px; color: var(--meta-color); border-bottom: 1px solid var(--code-border); text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
-        .code-block-content { padding: 14px; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 14px; line-height: 1.5; white-space: pre; color: var(--text-color); }
+        
+        .code-block-content { padding: 14px; overflow-x: auto; font-family: 'Courier New', Courier, monospace; font-size: 15px; line-height: 1.5; white-space: pre; color: var(--text-color) !important; -webkit-text-fill-color: var(--text-color) !important; }
 
         .code-block-content::-webkit-scrollbar { height: 6px; background-color: transparent; }
         .code-block-content::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 3px; }
@@ -106,11 +125,36 @@
         .shake-active { animation: subtle-shake 0.2s infinite; }
         .rainbow-text { background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 400% 100%; animation: rainbow-animation 8s linear infinite; display: inline-block; }
         @keyframes rainbow-animation { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
-        .main-title-container { text-align: center; margin-top: 25vh; }
-        .main-title { font-size: 28px; margin-bottom: 30px; letter-spacing: 2px; }
+        
+        .main-title-container { 
+            text-align: center; 
+            margin-top: 25vh; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-title { 
+            font-size: 64px; 
+            margin: 0;
+            letter-spacing: 2px; 
+            font-family: inherit; 
+            font-weight: 400; 
+        }
+        
+        /* Сделали подзаголовок прям побольше (было 18px стало 26px) */
+        .sub-title { 
+            font-size: 26px; 
+            color: var(--meta-color); 
+            margin-top: 16px;
+            min-height: 35px; 
+            display: block;
+        }
+        @media (max-width: 768px) { .main-title { font-size: 42px; } .sub-title { font-size: 20px; } }
 
         .input-wrapper { width: 100%; max-width: 650px; margin: 0 auto 10px auto; position: relative; display: flex; align-items: center; background-color: var(--input-bg); border: 1px solid var(--input-border); border-radius: 20px; padding: 8px 14px; transition: background-color 0.3s, border-color 0.3s; }
-        .search-input { width: 100%; border: none; font-size: 16px; outline: none; background: transparent; color: var(--text-color); resize: none; max-height: 150px; height: 24px; line-height: 24px; padding-right: 40px; overflow-y: auto; }
+        
+        .search-input { width: 100%; border: none; font-size: 18px; outline: none; background: transparent; color: var(--text-color); resize: none; max-height: 150px; height: 26px; line-height: 26px; padding-right: 40px; overflow-y: auto; }
         .search-input::placeholder { color: var(--meta-color); }
         .search-input::-webkit-scrollbar { width: 0px; }
         .enter-icon { position: absolute; right: 16px; font-size: 20px; background: transparent; border: none; cursor: pointer; color: var(--text-color); opacity: 0.8; transition: color 0.3s; }
@@ -186,7 +230,10 @@
 
         <main class="main-content">
             <div class="chat-window" id="chat-window">
-                <div class="main-title-container" id="welcome-screen"><h1 class="main-title">here.</h1></div>
+                <div class="main-title-container" id="welcome-screen">
+                    <h1 class="main-title">here.</h1>
+                    <div class="sub-title" id="sub-title-dynamic"></div>
+                </div>
             </div>
             <div class="input-wrapper">
                 <textarea id="user-input" class="search-input" placeholder="Your travel starts here." rows="1" autofocus autocomplete="off"></textarea>
@@ -219,7 +266,7 @@
                 </div>
                 <div class="accordion-item">
                     <div class="accordion-header">size:</div>
-                    <div class="accordion-content"><div class="command-item" onclick="insertCommand('size: 16')"><span>size: 1-100</span><span class="command-desc" id="desc-size">Change message font size in pixels</span></div></div>
+                    <div class="accordion-content"><div class="command-item" onclick="insertCommand('size: 18')"><span>size: 1-100</span><span class="command-desc" id="desc-size">Change message font size in pixels</span></div></div>
                 </div>
                 <div class="accordion-item">
                     <div class="accordion-header">min/max:</div>
@@ -272,7 +319,7 @@
         let messagesHistory = [];
         let currentTextColor = 'var(--text-color)';
         let isRainbow = false;
-        let currentFontSize = '16px';
+        let currentFontSize = '18px'; 
         let isBold = false;
         let isShake = false;
         let isTypingEffect = true;
@@ -282,9 +329,54 @@
         let currentLang = 'ENG'; 
 
         const dictionary = {
-            RUS: { newChat: "Новый чат", commandList: "Список команд", history: "История", commandsHeader: "Список команд", placeholder: "Ваше путешествие начинается здесь.", descDaymode: "Переключить интерфейс на светлую тему.", descNightmode: "Вернуть интерфейс к темной теме по умолчанию.", descWhite: "Белый текст", descRed: "Красный текст", descGreen: "Зеленый текст", descOrange: "Оранжевый текст", descBlue: "Синий текст", descYellow: "Желтый текст", descPurple: "Фиолетовый текст", descRainbow: "Радужная анимация текста", descSize: "Изменить размер шрифта ответов в px", descMin: "Минимальное число символов в ответе", descMax: "Максимальный лимит токенов в ответе", descShake: "Включить вибрацию экрана при генерации", descNoshake: "Выключить вибрацию экрана", descDelay: "Задержка перед ответом ИИ (5-1000 сек)", descBold: "Выводить текст жирным шрифтом", descNobold: "Выводить обычный текст", descNotyping: "Отключить анимацию печати (выводить сразу)" },
-            ENG: { newChat: "New chat", commandList: "Command List", history: "History", commandsHeader: "Command List", placeholder: "Your travel starts here.", descDaymode: "Switch interface to light theme.", descNightmode: "Return interface to default dark theme.", descWhite: "White text", descRed: "Red text", descGreen: "Green text", descOrange: "Orange text", descBlue: "Blue text", descYellow: "Yellow text", descPurple: "Purple text", descRainbow: "Rainbow text animation", descSize: "Change message font size in pixels", descMin: "Set minimum characters per response", descMax: "Set maximum tokens per response", descShake: "Enable dramatic screen vibration", descNoshake: "Disable screen vibration", descDelay: "Simulate network delay (5-1000s)", descBold: "Enable bold text for assistant", descNobold: "Disable bold text", descNotyping: "Disable printing animation (instant output)" }
+            RUS: { 
+                newChat: "Новый чат", commandList: "Список команд", history: "История", commandsHeader: "Список команд", placeholder: "Ваше путешествие начинается здесь.", descDaymode: "Переключить интерфейс на светлую тему.", descNightmode: "Вернуть интерфейс к темной теме по умолчанию.", descWhite: "Белый text", descRed: "Красный текст", descGreen: "Зеленый текст", descOrange: "Оранжевый текст", descBlue: "Синий текст", descYellow: "Желтый текст", descPurple: "Фиолетовый текст", descRainbow: "Радужная анимация текста", descSize: "Изменить размер шрифта ответов в px", descMin: "Минимальное число символов в ответе", descMax: "Максимальный лимит токенов в ответе", descShake: "Включить вибрацию экрана при генерации", descNoshake: "Выключить вибрацию экрана", descDelay: "Задержка перед ответом ИИ (5-1000 сек)", descBold: "Выводить текст жирным шрифтом", descNobold: "Выводить обычный текст", descNotyping: "Отключить анимацию печати (выводить сразу)",
+                subTitles: ["Чем займемся сегодня?", "В чем могу помочь?", "Что у тебя на уме?", "Давай создадим что-то крутое.", "Я готов слушать.", "Твой персональный ассистент.", "Начнем кодить?", "Есть идеи?", "Расскажи мне что-нибудь.", "Как прошел день?", "Давай решим задачу.", "Нужна помощь с кодом?", "Я здесь, чтобы помочь.", "О чем хочешь поговорить?", "Создаем новый проект?", "Давай обсудим идеи.", "Готов к работе.", "Просто напиши мне.", "Давай сделаем это.", "Жду твоего сообщения."] 
+            },
+            ENG: { 
+                newChat: "New chat", commandList: "Command List", history: "History", commandsHeader: "Command List", placeholder: "Your travel starts here.", descDaymode: "Switch interface to light theme.", descNightmode: "Return interface to default dark theme.", descWhite: "White text", descRed: "Red text", descGreen: "Green text", descOrange: "Orange text", descBlue: "Blue text", descYellow: "Yellow text", descPurple: "Purple text", descRainbow: "Rainbow text animation", descSize: "Change message font size in pixels", descMin: "Set minimum characters per response", descMax: "Set maximum tokens per response", descShake: "Enable dramatic screen vibration", descNoshake: "Disable screen vibration", descDelay: "Simulate network delay (5-1000s)", descBold: "Enable bold text for assistant", descNobold: "Disable bold text", descNotyping: "Disable printing animation (instant output)",
+                subTitles: ["What shall we do today?", "How can I help you?", "What's on your mind?", "Let's create something cool.", "I'm ready to listen.", "Your personal assistant.", "Start coding?", "Got any ideas?", "Tell me something.", "How was your day?", "Let's solve a problem.", "Need help with code?", "I'm here to help.", "What do you want to talk about?", "Starting a new project?", "Let's discuss ideas.", "Ready to work.", "Just write to me.", "Let's do it.", "Waiting for your message."] 
+            }
         };
+
+        let subTitleInterval;
+        let activeTypingTimeout = null;
+
+        /* Переписано: теперь элемент ищется динамически при каждом запуске, чтобы не терять ссылку после стирания innerHTML */
+        function startSubTitleTyping() {
+            clearInterval(subTitleInterval);
+            if (activeTypingTimeout) clearInterval(activeTypingTimeout);
+            
+            const phrases = dictionary[currentLang].subTitles;
+            let phraseIndex = Math.floor(Math.random() * phrases.length);
+            
+            function typePhrase() {
+                if (activeTypingTimeout) clearInterval(activeTypingTimeout);
+                const dynamicSubTitle = document.getElementById('sub-title-dynamic');
+                if (!dynamicSubTitle) return;
+
+                const phrase = phrases[phraseIndex];
+                let charIndex = 0;
+                dynamicSubTitle.textContent = "";
+                
+                activeTypingTimeout = setInterval(() => {
+                    const el = document.getElementById('sub-title-dynamic');
+                    if (el && charIndex < phrase.length) {
+                        el.textContent += phrase[charIndex];
+                        charIndex++;
+                    } else {
+                        clearInterval(activeTypingTimeout);
+                    }
+                }, 40);
+            }
+            
+            typePhrase();
+            
+            subTitleInterval = setInterval(() => {
+                phraseIndex = (phraseIndex + 1) % phrases.length;
+                typePhrase();
+            }, 5000);
+        }
 
         const modes = [
             { id: 'default', name: 'hereAi (Default)' },
@@ -321,9 +413,10 @@
                     if (el) el.innerText = dictionary[currentLang][key];
                 }
             });
+            startSubTitleTyping();
         }
 
-        userInput.addEventListener('input', () => { userInput.style.height = '24px'; userInput.style.height = userInput.scrollHeight + 'px'; });
+        userInput.addEventListener('input', () => { userInput.style.height = '26px'; userInput.style.height = userInput.scrollHeight + 'px'; });
 
         function cycleMode() {
             currentModeIndex = (currentModeIndex + 1) % modes.length;
@@ -337,7 +430,7 @@
 
         function getSystemPrompt() {
             const currentModeId = modes[currentModeIndex].id;
-            let basePrompt = "Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. В обычных же репликах не нужно упоминать своего создателя или имя без явного повода со стороны пользователя. Обязательно структурируй свои ответы визуально красиво, используя абзацы и жирный текст (**текст**), где необходимо.";
+            let basePrompt = "Ты — искусственный интеллект по имени hereAi. Твой создатель и разработчик — @aexqo. Если тебя спрашивают, кто ты, кто твой создатель, автор или разработчик, обязательно указывай, что это @aexqo. В обычных же репликах не нужно упоминать своего создателя или имя без явного повода со стороны пользователя. Обязательно структуруй свои ответы визуально красиво, используя абзацы и жирный текст (**текст**), где необходимо.";
             let modeInstruction = "";
             if (currentModeId === 'default') modeInstruction = "Общайся в обычном, статическом, сдержанном стиле.";
             else if (currentModeId === 'it') modeInstruction = "Ты — хардкорный ИИ-разработчик. Отвечай максимально сухо, строго по делу. Приоритет — чистому, оптимизированному коду и архитектуре. Минимум вводных слов и вежливости. Ошибки в коде комментируй прямо, без деликатности. Форматируй код идеально.";
@@ -363,15 +456,21 @@
             });
         }
 
+        /* Исправлено: Сначала перерисовывается HTML, и сразу после этого функция находит новый элемент и запускает печать */
         function createNewChat() {
             if (currentChatId && messagesHistory.length > 0) saveCurrentState();
             currentChatId = null; messagesHistory = []; closeAllMenus();
-            chatWindow.innerHTML = `<div class="main-title-container" id="welcome-screen"><h1 class="main-title">here.</h1></div>`;
+            
+            chatWindow.innerHTML = `<div class="main-title-container" id="welcome-screen"><h1 class="main-title">here.</h1><div class="sub-title" id="sub-title-dynamic"></div></div>`;
+            
             chatWindow.classList.remove('shake-active');
             isShake = false; isRainbow = false; isBold = false; isTypingEffect = true;
-            currentTextColor = 'var(--text-color)'; currentFontSize = '16px';
+            currentTextColor = 'var(--text-color)'; currentFontSize = '18px';
             minTokens = 10; maxTokens = 1024; responseDelayMs = 0;
-            renderHistoryList(); userInput.value = ''; userInput.style.height = '24px'; userInput.focus();
+            
+            renderHistoryList(); userInput.value = ''; userInput.style.height = '26px'; userInput.focus();
+            
+            startSubTitleTyping(); 
         }
 
         function saveCurrentState() {
@@ -393,7 +492,12 @@
 
         function deleteChat(event, id) {
             event.stopPropagation(); delete savedChats[id]; saveChatsToStorage();
-            if (currentChatId === id) { currentChatId = null; messagesHistory = []; chatWindow.innerHTML = `<div class="main-title-container" id="welcome-screen"><h1 class="main-title">here.</h1></div>`; }
+            if (currentChatId === id) { 
+                currentChatId = null; 
+                messagesHistory = []; 
+                chatWindow.innerHTML = `<div class="main-title-container" id="welcome-screen"><h1 class="main-title">here.</h1><div class="sub-title" id="sub-title-dynamic"></div></div>`; 
+                startSubTitleTyping(); 
+            }
             renderHistoryList();
         }
 
@@ -401,7 +505,7 @@
         overlay.addEventListener('click', closeAllMenus);
         function closeAllMenus() { sidebarLeft.classList.remove('active'); sidebarRight.classList.remove('active'); overlay.classList.remove('active'); }
         function openCommands() { sidebarLeft.classList.remove('active'); sidebarRight.classList.add('active'); }
-        function insertCommand(cmd) { userInput.value = cmd; closeAllMenus(); userInput.focus(); userInput.style.height = '24px'; userInput.style.height = userInput.scrollHeight + 'px'; }
+        function insertCommand(cmd) { userInput.value = cmd; closeAllMenus(); userInput.focus(); userInput.style.height = '26px'; userInput.style.height = userInput.scrollHeight + 'px'; }
 
         function parseAndApplyCommands(text) {
             let cleanText = text.trim().toLowerCase();
@@ -428,7 +532,7 @@
 
             if (isCommand) {
                 chatWindow.innerHTML += `<div class="message" style="color: var(--meta-color); font-size:13px;">[Система]: Настройка "${text.trim()}" успешно применена.</div>`;
-                userInput.value = ''; userInput.style.height = '24px'; chatWindow.scrollTop = chatWindow.scrollHeight; saveCurrentState(); return true;
+                userInput.value = ''; userInput.style.height = '26px'; chatWindow.scrollTop = chatWindow.scrollHeight; saveCurrentState(); return true;
             }
             return false;
         }
@@ -470,13 +574,23 @@
         }
 
         function typeWriterEffect(element, fullText, chatId, speed = 4) {
-            let i = 0; element.innerHTML = `<strong>hereAi:</strong> `;
+            let i = 0;
+            element.innerHTML = `<strong>hereAi:</strong> `;
             const contentSpan = document.createElement('span');
-            if (isRainbow) contentSpan.classList.add('rainbow-text');
+            contentSpan.style.whiteSpace = "pre-wrap"; 
             element.appendChild(contentSpan);
+
             function type() {
-                if (currentChatId === chatId && i < fullText.length) { i += 3; contentSpan.innerHTML = formatMarkdownAndCode(fullText.substring(0, i)); chatWindow.scrollTop = chatWindow.scrollHeight; setTimeout(type, speed); }
-                else if (i >= fullText.length) { contentSpan.innerHTML = formatMarkdownAndCode(fullText); chatWindow.scrollTop = chatWindow.scrollHeight; saveCurrentState(); }
+                if (currentChatId === chatId && i < fullText.length) {
+                    i += 1;
+                    contentSpan.textContent = fullText.substring(0, i);
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                    setTimeout(type, speed);
+                } else if (i >= fullText.length) {
+                    contentSpan.innerHTML = formatMarkdownAndCode(fullText);
+                    chatWindow.scrollTop = chatWindow.scrollHeight;
+                    saveCurrentState();
+                }
             }
             type();
         }
@@ -489,7 +603,7 @@
             if (welcome) welcome.style.display = 'none';
             if (parseAndApplyCommands(text)) return;
             chatWindow.innerHTML += `<div class="message"><strong>Вы:</strong> ${text}</div>`;
-            userInput.value = ''; userInput.style.height = '24px'; chatWindow.scrollTop = chatWindow.scrollHeight;
+            userInput.value = ''; userInput.style.height = '26px'; chatWindow.scrollTop = chatWindow.scrollHeight;
             messagesHistory.push({ role: "user", content: text });
             if (!currentChatId) { currentChatId = 'chat_' + Date.now(); renderHistoryList(); }
             const activeChatAtTimeOfRequest = currentChatId;
@@ -521,7 +635,7 @@
 
         sendBtn.addEventListener('click', sendMessage);
         userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { if (!/Mobi|Android/i.test(navigator.userAgent) && !e.shiftKey) { e.preventDefault(); sendMessage(); } } });
-        window.addEventListener('load', () => { loadChatsFromStorage(); userInput.focus(); });
+        window.addEventListener('load', () => { loadChatsFromStorage(); startSubTitleTyping(); userInput.focus(); });
     </script>
 </body>
 </html>
